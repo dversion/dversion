@@ -1,0 +1,17 @@
+{
+    "name": "dversion/dversion",
+    "description": "Database versioning tool",
+    "keywords": ["database", "versioning"],
+    "license": "MIT",
+    "require": {
+        "php": ">=5.3",
+        "ext-pdo": "*",
+        "symfony/console": "2.5.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Dversion\\": "src/"
+        }
+    },
+    "bin": ["bin/dversion"]
+}
