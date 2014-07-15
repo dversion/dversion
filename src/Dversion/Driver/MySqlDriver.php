@@ -157,6 +157,22 @@ class MySqlDriver implements Driver
     /**
      * {@inheritdoc}
      */
+    public function getPreDumpSql()
+    {
+        return array('SET foreign_key_checks = 0;');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPostDumpSql()
+    {
+        return array('SET foreign_key_checks = 1;');
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function quoteIdentifier($name)
     {
         return '`' . str_replace('`', '``', $name) . '`';

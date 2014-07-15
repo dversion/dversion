@@ -79,6 +79,20 @@ interface Driver
     public function dropDatabase($name);
 
     /**
+     * Returns an array of SQL statements to insert before the database dump.
+     *
+     * @return array
+     */
+    public function getPreDumpSql();
+
+    /**
+     * Returns an array of SQL statements to insert after the database dump.
+     *
+     * @return array
+     */
+    public function getPostDumpSql();
+
+    /**
      * Quotes an identifier such as a table name or field name.
      *
      * @param string $name

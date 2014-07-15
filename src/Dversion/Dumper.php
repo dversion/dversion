@@ -81,6 +81,10 @@ class Dumper
      */
     public function dumpDatabase($output)
     {
+        foreach ($this->driver->getPreDumpSql() as $sql) {
+            $output($sql);
+        }
+
         foreach (self::$objectTypes as $objectType) {
             foreach ($this->driver->getObjects($objectType) as $name) {
                 $output($this->driver->getCreateSql($objectType, $name));
@@ -89,6 +93,10 @@ class Dumper
                     $this->dumpTableData($name, $output);
                 }
             }
+        }
+
+        foreach ($this->driver->getPostDumpSql() as $sql) {
+            $output($sql);
         }
     }
 
