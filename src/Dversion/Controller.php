@@ -70,7 +70,7 @@ class Controller
 
         if ($test) {
             $targetDriver = $this->createDatabase($temporaryDatabaseName);
-            $this->copyDatabase($targetDriver, $temporaryDatabaseName);
+            $this->copyDatabase($targetDriver);
         } else {
             $targetDriver = $this->configuration->getDriver();
         }
@@ -235,9 +235,8 @@ class Controller
 
     /**
      * @param Driver $targetDriver The target driver.
-     * @param string $targetName   The target database name.
      */
-    private function copyDatabase(Driver $targetDriver, $targetName)
+    private function copyDatabase(Driver $targetDriver)
     {
         $driver = $this->configuration->getDriver();
 
