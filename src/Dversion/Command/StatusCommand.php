@@ -29,8 +29,6 @@ class StatusCommand extends AbstractCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $controller = new Controller($this->configuration, $output);
-
-        return $controller->status();
+        return $this->getController($output)->status();
     }
 }

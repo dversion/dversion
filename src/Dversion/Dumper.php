@@ -75,7 +75,9 @@ class Dumper
     }
 
     /**
-     * @param callable $output
+     * Dumps the database to an output function.
+     *
+     * @param callable $output A function that will be called with every SQL statement.
      *
      * @return void
      */
@@ -98,6 +100,33 @@ class Dumper
         foreach ($this->driver->getPostDumpSql() as $sql) {
             $output($sql);
         }
+    }
+
+    /**
+     * Counts the number of objects to dump, including the table rows.
+     *
+     * @param callable $output A function that will be called for every count.
+     *
+     * @return void
+     */
+    public function countObjects($output)
+    {
+        $output(count($this->driver->getPreDumpSql()));
+
+        foreach (self::$objectTypes as $objectType) {
+            $objects = $this->driver->getObjects($objectType);
+            $output(count($objects));
+
+            if ($objectType == self::OBJECT_TABLE) {
+                foreach ($objects as $tableName) {
+                    $tableName = $this->driver->quoteIdentifier($tableName);
+                    $rows = $this->pdo->query("SELECT COUNT(*) FROM $tableName")->fetchColumn();
+                    $output($rows);
+                }
+            }
+        }
+
+        $output(count($this->driver->getPostDumpSql()));
     }
 
     /**

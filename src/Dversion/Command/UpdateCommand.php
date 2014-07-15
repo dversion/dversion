@@ -36,9 +36,7 @@ class UpdateCommand extends AbstractCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $controller = new Controller($this->configuration, $output);
-
-        return $controller->update(
+        return $this->getController($output)->update(
             (bool) $input->getOption('test')
         );
     }

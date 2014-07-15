@@ -42,9 +42,7 @@ class ResetCommand extends AbstractCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $controller = new Controller($this->configuration, $output);
-
-        return $controller->reset(
+        return $this->getController($output)->reset(
             (bool) $input->getOption('resume'),
             (bool) $input->getOption('test')
         );

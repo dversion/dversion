@@ -2,6 +2,7 @@
 
 namespace Dversion;
 
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -241,16 +242,35 @@ class Controller
     private function copyDatabase(Driver $targetDriver, $targetName)
     {
         $driver = $this->configuration->getDriver();
-        $this->output->write('Copying database ' . $driver->getDatabaseName() . ' to ' . $targetName);
 
         $dumper = new Dumper($driver);
-        $output = $this->output;
 
-        $dumper->dumpDatabase(function($query) use ($targetDriver, $output) {
-            $targetDriver->getPdo()->exec($query);
-            $output->write('.');
+        $progress = new ProgressBar($this->output);
+        $progress->setMessage('Counting objects');
+        $progress->setFormat('%message% [%bar%] %current%');
+        $progress->start();
+
+        $objectCount = 0;
+
+        $dumper->countObjects(function($count) use ($progress, & $objectCount) {
+            $objectCount += $count;
+            $progress->setCurrent($objectCount);
         });
 
+        $progress->finish();
+        $this->output->writeln('');
+
+        $progress = new ProgressBar($this->output, $objectCount);
+        $progress->setMessage('Copying database');
+        $progress->setFormat('%message% [%bar%] %current%/%max% %percent:3s%%');
+        $progress->start();
+
+        $dumper->dumpDatabase(function($query) use ($targetDriver, $progress) {
+            $targetDriver->getPdo()->exec($query);
+            $progress->advance();
+        });
+
+        $progress->finish();
         $this->output->writeln('');
     }
 

@@ -36,9 +36,7 @@ class CreateResumePointCommand extends AbstractCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $controller = new Controller($this->configuration, $output);
-
-        return $controller->createResumePoint(
+        return $this->getController($output)->createResumePoint(
             (bool) $input->getOption('resume')
         );
     }
