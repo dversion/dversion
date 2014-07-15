@@ -17,9 +17,10 @@ $configuration = require 'dversion.php';
 
 $application = new Application();
 
+$application->add(new Command\CleanupCommand($configuration));
+$application->add(new Command\CreateResumePointCommand($configuration));
+$application->add(new Command\ResetCommand($configuration));
 $application->add(new Command\StatusCommand($configuration));
 $application->add(new Command\UpdateCommand($configuration));
-$application->add(new Command\ResetCommand($configuration));
-$application->add(new Command\CreateResumePointCommand($configuration));
 
 $application->run();

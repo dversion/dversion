@@ -139,6 +139,14 @@ class MySqlDriver implements Driver
     /**
      * {@inheritdoc}
      */
+    public function listDatabases()
+    {
+        return $this->fetchArray('SHOW DATABASES', 0);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function createDatabase($name)
     {
         $this->pdo->exec('CREATE DATABASE ' . $this->quoteIdentifier($name));

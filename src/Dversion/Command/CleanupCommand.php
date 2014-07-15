@@ -8,9 +8,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Command to show the status of the database.
+ * Command to clean up stale temporary databases.
  */
-class StatusCommand extends AbstractCommand
+class CleanupCommand extends AbstractCommand
 {
     /**
      * {@inheritdoc}
@@ -18,8 +18,8 @@ class StatusCommand extends AbstractCommand
     protected function configure()
     {
         $this
-            ->setName('status')
-            ->setDescription('Show the sync status of the database with the patch files')
+            ->setName('cleanup')
+            ->setDescription('Clean up the stale temporary databases')
         ;
     }
 
@@ -28,6 +28,6 @@ class StatusCommand extends AbstractCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        return $this->getController($output)->status();
+        return $this->getController($output)->cleanup();
     }
 }

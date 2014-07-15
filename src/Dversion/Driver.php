@@ -58,6 +58,13 @@ interface Driver
     public function createVersionTable($name);
 
     /**
+     * Returns the list of available databases.
+     *
+     * @return array
+     */
+    public function listDatabases();
+
+    /**
      * Creates a database of the given name.
      *
      * @param string $name The database name.

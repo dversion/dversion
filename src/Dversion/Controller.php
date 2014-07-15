@@ -188,6 +188,23 @@ class Controller
     }
 
     /**
+     * @return integer
+     */
+    public function cleanup()
+    {
+        $driver = $this->configuration->getDriver();
+        $databases = $driver->listDatabases();
+
+        foreach ($databases as $database) {
+            if (preg_match($this->getTemporaryDatabasePattern(), $database)) {
+                $this->dropDatabase($database);
+            }
+        }
+
+        return 0;
+    }
+
+    /**
      * @param Driver  $targetDriver
      * @param integer $currentVersion
      * @param integer $latestVersion
@@ -341,7 +358,6 @@ class Controller
         $versions = array();
 
         foreach ($files as $file) {
-            /** @var $file \DirectoryIterator */
             if ($file->isFile()) {
                 if (preg_match('/^([0-9]+)\.sql$/', $file->getFilename(), $matches)) {
                     $versions[] = (int) $matches[1];
@@ -473,6 +489,14 @@ class Controller
     private function getTemporaryDatabaseName()
     {
         return 'temp_' . time();
+    }
+
+    /**
+     * @return string
+     */
+    private function getTemporaryDatabasePattern()
+    {
+        return '/^temp_[0-9]{10}$/';
     }
 
     /**

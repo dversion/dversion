@@ -2,7 +2,6 @@
 
 namespace Dversion\Command;
 
-use Dversion\Controller;
 use Dversion\Driver;
 
 use Symfony\Component\Console\Input\InputInterface;
