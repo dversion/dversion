@@ -80,28 +80,26 @@ class Controller
 
         $latestVersion = $this->getLatestDatabaseVersion();
 
+        $returnCode = 0;
+
         if ($currentVersion > $latestVersion) {
             $this->output->writeln('The database version is greater than the latest revision file.');
             $this->output->writeln('You should probably update your working copy.');
 
-            return 1;
-        }
-
-        if ($currentVersion == $latestVersion) {
+            $returnCode = 1;
+        } elseif ($currentVersion == $latestVersion) {
             $this->output->writeln('The database is up to date!');
+        } else {
+            $this->runUpdates($targetDriver, $currentVersion, $latestVersion);
 
-            return 0;
+            $this->output->writeln('Success!');
         }
-
-        $this->runUpdates($targetDriver, $currentVersion, $latestVersion);
-
-        $this->output->writeln('Success!');
 
         if ($test) {
             $this->dropDatabase($temporaryDatabaseName);
         }
 
-        return 0;
+        return $returnCode;
     }
 
     /**
