@@ -89,13 +89,11 @@ class Controller
 
         if ($currentVersion == $latestVersion) {
             $this->output->writeln('The database is up to date!');
+        } else {
+            $this->runUpdates($targetDriver, $currentVersion, $latestVersion);
 
-            return 0;
+            $this->output->writeln('Success!');
         }
-
-        $this->runUpdates($targetDriver, $currentVersion, $latestVersion);
-
-        $this->output->writeln('Success!');
 
         if ($test) {
             $this->dropDatabase($temporaryDatabaseName);
