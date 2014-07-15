@@ -70,7 +70,7 @@ class Controller
 
         if ($test) {
             $targetDriver = $this->createDatabase($temporaryDatabaseName);
-            $this->copyDatabase($targetDriver, $temporaryDatabaseName);
+            $this->copyDatabase($targetDriver);
         } else {
             $targetDriver = $this->configuration->getDriver();
         }
@@ -196,14 +196,26 @@ class Controller
      */
     private function runUpdates(Driver $targetDriver, $currentVersion, $latestVersion)
     {
+        $progress = new ProgressBar($this->output, $latestVersion - $currentVersion);
+        $progress->setFormat('%message% [%bar%] %version% %percent:3s%%');
+        $progress->setMessage('Applying version');
+        $progress->setMessage('', 'version');
+        $progress->start();
+
         for ($version = $currentVersion + 1; $version <= $latestVersion; $version++) {
+            $progress->setMessage("$version/$latestVersion", 'version');
+            $progress->display();
             $sqlFilePath = $this->getSqlPath() . '/' . $version . '.sql';
 
-            $this->output->writeln('Upgrading to version ' . $version);
-            $this->startUpgrade($targetDriver, $version);
+            $this->startUpdate($targetDriver, $version);
             $this->importSqlFile($targetDriver->getPdo(), $sqlFilePath);
-            $this->endUpgrade($targetDriver, $version);
+            $this->endUpdate($targetDriver, $version);
+
+            $progress->advance();
         }
+
+        $progress->finish();
+        $this->output->writeln('');
     }
 
     /**
@@ -235,13 +247,26 @@ class Controller
 
     /**
      * @param Driver $targetDriver The target driver.
-     * @param string $targetName   The target database name.
+     *
+     * @return void
      */
-    private function copyDatabase(Driver $targetDriver, $targetName)
+    private function copyDatabase(Driver $targetDriver)
     {
-        $driver = $this->configuration->getDriver();
+        $this->doDumpDatabase($this->configuration->getDriver(), function($query) use ($targetDriver) {
+            $targetDriver->getPdo()->exec($query);
+        }, 'Copying database');
+    }
 
-        $dumper = new Dumper($driver);
+    /**
+     * @param Driver   $sourceDriver The source driver.
+     * @param callable $output       A function to call with every SQL statement.
+     * @param string   $message      The message going next to the progress bar.
+     *
+     * @return void
+     */
+    private function doDumpDatabase(Driver $sourceDriver, $output, $message)
+    {
+        $dumper = new Dumper($sourceDriver);
 
         $progress = new ProgressBar($this->output);
         $progress->setMessage('Counting objects');
@@ -259,12 +284,12 @@ class Controller
         $this->output->writeln('');
 
         $progress = new ProgressBar($this->output, $objectCount);
-        $progress->setMessage('Copying database');
+        $progress->setMessage($message);
         $progress->setFormat('%message% [%bar%] %current%/%max% %percent:3s%%');
         $progress->start();
 
-        $dumper->dumpDatabase(function($query) use ($targetDriver, $progress) {
-            $targetDriver->getPdo()->exec($query);
+        $dumper->dumpDatabase(function($query) use ($output, $progress) {
+            $output($query);
             $progress->advance();
         });
 
@@ -374,7 +399,7 @@ class Controller
         $statement = $pdo->query('SELECT version FROM ' . $table . ' WHERE upgradeEnd IS NULL LIMIT 1');
         $version = $statement->fetchColumn();
         if ($version !== false) {
-            throw new \RuntimeException('Error: previous upgrade to version ' . $version . ' has not completed.');
+            throw new \RuntimeException('Error: previous update to version ' . $version . ' has not completed.');
         }
 
         $statement = $pdo->query('SELECT version FROM ' . $table . ' ORDER BY version DESC LIMIT 1');
@@ -399,46 +424,42 @@ class Controller
         $sqlDumpFilePath = $this->getSqlDumpPath() . '/' . $version . '.sql';
         $fp = fopen($sqlDumpFilePath, 'wb');
 
-        $dumper = new Dumper($driver);
-        $output = $this->output;
-
-        $dumper->dumpDatabase(function($query) use ($fp, $output) {
+        $this->doDumpDatabase($driver, function($query) use ($fp) {
             fwrite($fp, $query . PHP_EOL);
-            $output->write('.');
-        });
+        }, 'Dumping database');
 
-        $this->output->writeln('');
+        fclose($fp);
     }
 
     /**
-     * @param Driver  $driver
-     * @param integer $version
+     * @param Driver  $driver  The target driver.
+     * @param integer $version The version being applied.
      *
      * @return void
      */
-    private function startUpgrade(Driver $driver, $version)
+    private function startUpdate(Driver $driver, $version)
     {
-        $table = $driver->quoteIdentifier($this->configuration->getVersionTableName());
         $pdo = $driver->getPdo();
+        $table = $driver->quoteIdentifier($this->configuration->getVersionTableName());
 
-        $statement = $pdo->prepare('INSERT INTO ' . $table . ' (version) VALUES(?)');
+        $statement = $pdo->prepare("INSERT INTO $table (version) VALUES (?)");
         $statement->execute(array($version));
     }
 
     /**
-     * @param Driver  $driver
-     * @param integer $version
+     * @param Driver  $driver  The target driver.
+     * @param integer $version The version being applied.
      *
      * @return void
      *
      * @throws \RuntimeException
      */
-    private function endUpgrade(Driver $driver, $version)
+    private function endUpdate(Driver $driver, $version)
     {
-        $table = $driver->quoteIdentifier($this->configuration->getVersionTableName());
         $pdo = $driver->getPdo();
+        $table = $driver->quoteIdentifier($this->configuration->getVersionTableName());
 
-        $statement = $pdo->prepare('UPDATE ' . $table . ' SET upgradeEnd = CURRENT_TIMESTAMP() WHERE version = ?');
+        $statement = $pdo->prepare("UPDATE $table SET upgradeEnd = CURRENT_TIMESTAMP() WHERE version = ?");
         $statement->execute(array($version));
 
         if ($statement->rowCount() != 1) {
@@ -451,7 +472,7 @@ class Controller
      */
     private function getTemporaryDatabaseName()
     {
-        return 'test_' . time();
+        return 'temp_' . time();
     }
 
     /**
