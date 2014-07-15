@@ -235,12 +235,25 @@ class Controller
 
     /**
      * @param Driver $targetDriver The target driver.
+     *
+     * @return void
      */
     private function copyDatabase(Driver $targetDriver)
     {
-        $driver = $this->configuration->getDriver();
+        $this->doDumpDatabase($this->configuration->getDriver(), function($query) use ($targetDriver) {
+            $targetDriver->getPdo()->exec($query);
+        });
+    }
 
-        $dumper = new Dumper($driver);
+    /**
+     * @param Driver   $sourceDriver The source driver.
+     * @param callable $output       A function to call with every SQL statement.
+     *
+     * @return void
+     */
+    private function doDumpDatabase(Driver $sourceDriver, $output)
+    {
+        $dumper = new Dumper($sourceDriver);
 
         $progress = new ProgressBar($this->output);
         $progress->setMessage('Counting objects');
@@ -262,8 +275,8 @@ class Controller
         $progress->setFormat('%message% [%bar%] %current%/%max% %percent:3s%%');
         $progress->start();
 
-        $dumper->dumpDatabase(function($query) use ($targetDriver, $progress) {
-            $targetDriver->getPdo()->exec($query);
+        $dumper->dumpDatabase(function($query) use ($output, $progress) {
+            $output($query);
             $progress->advance();
         });
 
@@ -398,15 +411,11 @@ class Controller
         $sqlDumpFilePath = $this->getSqlDumpPath() . '/' . $version . '.sql';
         $fp = fopen($sqlDumpFilePath, 'wb');
 
-        $dumper = new Dumper($driver);
-        $output = $this->output;
-
-        $dumper->dumpDatabase(function($query) use ($fp, $output) {
+        $this->doDumpDatabase($driver, function($query) use ($fp) {
             fwrite($fp, $query . PHP_EOL);
-            $output->write('.');
         });
 
-        $this->output->writeln('');
+        fclose($fp);
     }
 
     /**
@@ -450,7 +459,7 @@ class Controller
      */
     private function getTemporaryDatabaseName()
     {
-        return 'test_' . time();
+        return 'temp_' . time();
     }
 
     /**
