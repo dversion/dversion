@@ -120,16 +120,7 @@ class Controller
         $targetDriver = $this->createDatabase($targetDatabaseName);
 
         if ($resume) {
-            $currentVersion = $this->getDumpVersion();
-            $this->output->writeln('Resuming at version ' . $currentVersion);
-            $sqlFilePath = $this->getSqlDumpPath() . '/' . $currentVersion . '.sql';
-            $this->importSqlFile($targetDriver->getPdo(), $sqlFilePath);
-
-            if ($currentVersion != $this->getCurrentDatabaseVersion($targetDriver)) {
-                $this->output->writeln('Error resuming version ' . $currentVersion);
-
-                return 1;
-            }
+            $currentVersion = $this->resume($targetDriver);
         } else {
             $this->output->writeln('Creating the versioning table');
             $targetDriver->createVersionTable($this->configuration->getVersionTableName());
@@ -160,16 +151,7 @@ class Controller
         $targetDriver = $this->createDatabase($targetDatabaseName);
 
         if ($resume) {
-            $currentVersion = $this->getDumpVersion();
-            $this->output->writeln('Resuming at version ' . $currentVersion);
-            $sqlFilePath = $this->getSqlDumpPath() . '/' . $currentVersion . '.sql';
-            $this->importSqlFile($targetDriver->getPdo(), $sqlFilePath);
-
-            if ($currentVersion != $this->getCurrentDatabaseVersion($targetDriver)) {
-                $this->output->writeln('Error resuming version ' . $currentVersion);
-
-                return 1;
-            }
+            $currentVersion = $this->resume($targetDriver);
         } else {
             $this->output->writeln('Creating the versioning table');
             $targetDriver->createVersionTable($this->configuration->getVersionTableName());
@@ -321,7 +303,7 @@ class Controller
      */
     private function getLatestDatabaseVersion()
     {
-        $versions = $this->getSqlFileVersions($this->getSqlPath());
+        $versions = $this->getFileVersions($this->getSqlPath(), 'sql');
         $latestVersion = end($versions);
 
         if ($versions !== range(1, $latestVersion)) {
@@ -338,29 +320,32 @@ class Controller
      */
     private function getDumpVersion()
     {
-        $versions = $this->getSqlFileVersions($this->getSqlDumpPath());
+        $versions = $this->getFileVersions($this->getSqlDumpPath(), 'tar');
 
         if (count($versions) == 0) {
             throw new \RuntimeException('Cannot find SQL dump file');
         }
 
-        return reset($versions);
+        return end($versions);
     }
 
     /**
      * @param string $directory
+     * @param string $extension
      *
      * @return array
      */
-    private function getSqlFileVersions($directory)
+    private function getFileVersions($directory, $extension)
     {
         $files = new \DirectoryIterator($directory);
         $versions = array();
 
         foreach ($files as $file) {
-            if ($file->isFile()) {
-                if (preg_match('/^([0-9]+)\.sql$/', $file->getFilename(), $matches)) {
-                    $versions[] = (int) $matches[1];
+            if ($file->isFile() && $file->getExtension() == $extension) {
+                $filename = pathinfo($file->getFilename(), PATHINFO_FILENAME);
+
+                if (ctype_digit($filename)) {
+                    $versions[] = (int) $filename;
                 } else {
                     $this->output->writeln('Skipping file ' . $file->getFilename());
                 }
@@ -435,16 +420,91 @@ class Controller
      */
     private function doCreateResumePoint(Driver $driver, $version)
     {
-        $this->output->write('Creating resume point');
+        $directory = $this->getTemporaryName();
+        mkdir($directory);
 
-        $sqlDumpFilePath = $this->getSqlDumpPath() . '/' . $version . '.sql';
-        $fp = fopen($sqlDumpFilePath, 'wb');
+        $number = 1;
 
-        $this->doDumpDatabase($driver, function($query) use ($fp) {
-            fwrite($fp, $query . PHP_EOL);
+        $this->doDumpDatabase($driver, function($query) use ($directory, & $number) {
+            file_put_contents($this->getSqlFilePath($directory, $number), $query);
+            $number++;
         }, 'Dumping database');
 
-        fclose($fp);
+        $this->output->writeln('Creating archive file');
+
+        $archiveFile = $this->getSqlDumpPath() . '/' . $version . '.tar';
+
+        $phar = new \PharData($archiveFile);
+        $phar->buildFromDirectory($directory);
+
+        $this->output->writeln('Removing temporary files');
+
+        for ($i = 1; $i < $number; $i++) {
+            unlink($this->getSqlFilePath($directory, $i));
+        }
+
+        rmdir($directory);
+    }
+
+    /**
+     * Resumes the latest database dump.
+     *
+     * @param Driver $driver
+     *
+     * @return integer The version resumed.
+     *
+     * @throws \RuntimeException
+     */
+    private function resume(Driver $driver)
+    {
+        $version = $this->getDumpVersion();
+        $this->output->writeln('Resuming at version ' . $version);
+        $archivePath = $this->getSqlDumpPath() . '/' . $version . '.tar';
+
+        $phar = new \PharData($archivePath);
+
+        $progress = new ProgressBar($this->output, $phar->count());
+        $progress->setMessage('Resuming version');
+        $progress->setFormat('%message% [%bar%] %current%/%max% %percent:3s%%');
+        $progress->start();
+
+        foreach ($phar as $path => $file) {
+            $this->importSqlFile($driver->getPdo(), $path);
+            $progress->advance();
+        }
+
+        $progress->finish();
+        $this->output->writeln('');
+
+        if ($version != $this->getCurrentDatabaseVersion($driver)) {
+            throw new \RuntimeException('Error resuming version ' . $version);
+        }
+
+        return $version;
+    }
+
+    /**
+     * @param string  $directory
+     * @param integer $version
+     *
+     * @return string
+     */
+    private function getSqlFilePath($directory, $version)
+    {
+        return $directory . DIRECTORY_SEPARATOR . sprintf('%06u.sql', $version);
+    }
+
+    /**
+     * @return string
+     */
+    private function getTemporaryName()
+    {
+        do {
+            $directory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('dversion_');
+        }
+        while (file_exists($directory));
+
+        return $directory;
     }
 
     /**
