@@ -10,6 +10,8 @@ interface Driver
     /**
      * Returns the underlying PDO connection.
      *
+     * All PDO objects must be configured to throw exceptions as soon as they're created.
+     *
      * @return \PDO
      */
     public function getPdo();

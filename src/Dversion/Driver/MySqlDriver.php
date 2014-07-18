@@ -36,21 +36,57 @@ class MySqlDriver implements Driver
     private $pdo;
 
     /**
+     * @var string|null
+     */
+    private $charset;
+
+    /**
+     * @var string|null
+     */
+    private $collation;
+
+    /**
      * Class constructor.
      *
-     * @param string $host
-     * @param string $username
-     * @param string $password
-     * @param string $database
+     * The given database will be created if it does not exist.
+     *
+     * @param string      $host      The MySQL server host name or IP address.
+     * @param string      $username  The MySQL user name.
+     * @param string      $password  The MySQL password.
+     * @param string      $database  The MySQL database name.
+     * @param string|null $charset   An optional charset for the connection and default charset for new databases.
+     * @param string|null $collation An optional default collation for new databases.
      */
-    public function __construct($host, $username, $password, $database)
+    public function __construct($host, $username, $password, $database, $charset = null, $collation = null)
     {
-        $this->host     = $host;
-        $this->username = $username;
-        $this->password = $password;
-        $this->database = $database;
+        $this->host      = $host;
+        $this->username  = $username;
+        $this->password  = $password;
+        $this->database  = $database;
+        $this->charset   = $charset;
+        $this->collation = $collation;
 
-        $this->pdo = new \PDO("mysql:host={$this->host};dbname={$database}", $this->username, $this->password);
+        $dsn = 'mysql:host=' . $this->host;
+
+        if ($charset !== null) {
+            $dsn .= ';charset=' . $charset;
+        }
+
+        $this->pdo = new \PDO($dsn, $this->username, $this->password);
+        $this->pdo->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+
+        $query = 'CREATE DATABASE IF NOT EXISTS ' . $this->quoteIdentifier($database);
+
+        if ($charset === null) {
+            $query .= ' CHARACTER SET ' . $charset;
+        }
+
+        if ($collation !== null) {
+            $query .= ' COLLATE ' . $collation;
+        }
+
+        $this->pdo->exec($query);
+        $this->pdo->exec('USE ' . $this->quoteIdentifier($database));
     }
 
     /**
@@ -149,9 +185,7 @@ class MySqlDriver implements Driver
      */
     public function createDatabase($name)
     {
-        $this->pdo->exec('CREATE DATABASE ' . $this->quoteIdentifier($name));
-
-        return new MySqlDriver($this->host, $this->username, $this->password, $name);
+        return new MySqlDriver($this->host, $this->username, $this->password, $name, $this->charset, $this->collation);
     }
 
     /**

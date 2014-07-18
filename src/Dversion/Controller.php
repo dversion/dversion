@@ -28,8 +28,6 @@ class Controller
     {
         $this->configuration = $configuration;
         $this->output        = $output;
-
-        $this->setDriverExceptionMode($configuration->getDriver());
     }
 
     /**
@@ -227,7 +225,6 @@ class Controller
         $this->output->writeln('Creating database ' . $name);
 
         $driver = $this->configuration->getDriver()->createDatabase($name);
-        $this->setDriverExceptionMode($driver);
 
         return $driver;
     }
@@ -557,15 +554,5 @@ class Controller
     private function getTemporaryDatabasePattern()
     {
         return '/^temp_[0-9]{10}$/';
-    }
-
-    /**
-     * @param Driver $driver
-     *
-     * @return void
-     */
-    private function setDriverExceptionMode(Driver $driver)
-    {
-        $driver->getPdo()->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
     }
 }
