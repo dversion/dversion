@@ -421,9 +421,10 @@ class Controller
         mkdir($directory);
 
         $number = 1;
+        $that = $this;
 
-        $this->doDumpDatabase($driver, function($query) use ($directory, & $number) {
-            file_put_contents($this->getSqlFilePath($directory, $number), $query);
+        $this->doDumpDatabase($driver, function($query) use ($that, $directory, & $number) {
+            file_put_contents($that->getSqlFilePath($directory, $number), $query);
             $number++;
         }, 'Dumping database');
 
@@ -486,7 +487,7 @@ class Controller
      *
      * @return string
      */
-    private function getSqlFilePath($directory, $version)
+    public function getSqlFilePath($directory, $version)
     {
         return $directory . DIRECTORY_SEPARATOR . sprintf('%06u.sql', $version);
     }
