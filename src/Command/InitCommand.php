@@ -32,7 +32,7 @@ class InitCommand extends AbstractCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         return $this->getController($output)->init(
-            (int) $input->getOption('version')
+            (int) $input->getArgument('version')
         );
     }
 }
