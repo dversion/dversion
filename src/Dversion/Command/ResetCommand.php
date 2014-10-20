@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Command to reset the database.
+ * Resets the database.
  */
 class ResetCommand extends AbstractCommand
 {

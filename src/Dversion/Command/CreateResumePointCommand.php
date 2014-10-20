@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Command to create a resume point.
+ * Creates a resume point.
  */
 class CreateResumePointCommand extends AbstractCommand
 {

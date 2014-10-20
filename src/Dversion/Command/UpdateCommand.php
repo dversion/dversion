@@ -9,7 +9,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Command to update the database.
+ * Updates the database.
  */
 class UpdateCommand extends AbstractCommand
 {

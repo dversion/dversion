@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
- * Command to clean up stale temporary databases.
+ * Cleans up stale temporary databases.
  */
 class CleanupCommand extends AbstractCommand
 {

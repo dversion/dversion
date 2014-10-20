@@ -58,6 +58,27 @@ class Controller
     }
 
     /**
+     * @param integer $version
+     *
+     * @return integer
+     */
+    public function init($version)
+    {
+        $targetDriver = $this->configuration->getDriver();
+
+        $this->output->writeln('Creating the versioning table');
+        $targetDriver->createVersionTable($this->configuration->getVersionTableName());
+
+        $this->output->writeln('Writing version numbers');
+        for ($i = 1; $i <= $version; $i++) {
+            $this->startUpdate($targetDriver, $i);
+            $this->endUpdate($targetDriver, $i);
+        }
+
+        $this->output->writeln('Success!');
+    }
+
+    /**
      * @param boolean $test
      *
      * @return integer
