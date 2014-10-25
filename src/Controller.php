@@ -99,19 +99,17 @@ class Controller
 
         $latestVersion = $this->getLatestDatabaseVersion();
 
-        $returnCode = 0;
-
         if ($currentVersion > $latestVersion) {
             $this->output->writeln('The database version is greater than the latest revision file.');
             $this->output->writeln('You should probably update your working copy.');
-
             $returnCode = 1;
         } elseif ($currentVersion == $latestVersion) {
             $this->output->writeln('The database is up to date!');
+            $returnCode = 0;
         } else {
             $this->runUpdates($targetDriver, $currentVersion, $latestVersion);
-
             $this->output->writeln('Success!');
+            $returnCode = 0;
         }
 
         if ($test) {
@@ -400,7 +398,11 @@ class Controller
     private function importSqlFile(\PDO $pdo, $file)
     {
         $sql = file_get_contents($file);
-        $pdo->exec($sql);
+        $statement = $pdo->query($sql);
+
+        // If the SQL file contains several queries, and an error occurs on any query but the first one,
+        // only looping through the rowsets will throw a PDOException for this query.
+        while ($statement->nextRowset());
     }
 
     /**
