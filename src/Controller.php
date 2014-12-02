@@ -204,6 +204,48 @@ class Controller
     }
 
     /**
+     * @param string $direction
+     *
+     * @return integer
+     */
+    public function resolve($direction)
+    {
+        $driver = $this->configuration->getDriver();
+
+        $pdo = $driver->getPdo();
+        $table = $driver->quoteIdentifier($this->configuration->getVersionTableName());
+
+        $version = $this->getFailedDatabaseVersion($driver);
+
+        if ($version === null) {
+            throw new \RuntimeException('There is nothing to resolve.');
+        }
+
+        switch ($direction) {
+            case 'backward':
+                $statement = $pdo->prepare("DELETE FROM $table WHERE version = ?");
+                $statement->execute(array($version));
+                $version--;
+                break;
+
+            case 'forward':
+                $statement = $pdo->prepare("UPDATE $table SET upgradeEnd = CURRENT_TIMESTAMP() WHERE version = ?");
+                $statement->execute(array($version));
+                break;
+
+            default:
+                throw new \RuntimeException(
+                    'Invalid resolve direction: ' . $direction . PHP_EOL .
+                    'Valid values are backward and forward.'
+                );
+        }
+
+        $this->output->writeln(sprintf('Successfully resolved to version %d.', $version));
+
+        return 0;
+    }
+
+    /**
      * @param Driver  $targetDriver
      * @param integer $currentVersion
      * @param integer $latestVersion
@@ -417,10 +459,14 @@ class Controller
         $table = $driver->quoteIdentifier($this->configuration->getVersionTableName());
         $pdo = $driver->getPdo();
 
-        $statement = $pdo->query('SELECT version FROM ' . $table . ' WHERE upgradeEnd IS NULL LIMIT 1');
-        $version = $statement->fetchColumn();
-        if ($version !== false) {
-            throw new \RuntimeException('Error: previous update to version ' . $version . ' has not completed.');
+        $version = $this->getFailedDatabaseVersion($driver);
+
+        if ($version !== null) {
+            throw new \RuntimeException(
+                'Error: previous update to version ' . $version . ' has not completed.' . PHP_EOL .
+                'Resolve the problem manually then use the resolve command.' . PHP_EOL .
+                'Run dversion help resolve for more information.'
+            );
         }
 
         $statement = $pdo->query('SELECT version FROM ' . $table . ' ORDER BY version DESC LIMIT 1');
@@ -430,6 +476,22 @@ class Controller
         }
 
         return (int) $version;
+    }
+
+    /**
+     * @param Driver $driver
+     *
+     * @return integer|null The failed database version, or null if no update has failed.
+     */
+    private function getFailedDatabaseVersion(Driver $driver)
+    {
+        $table = $driver->quoteIdentifier($this->configuration->getVersionTableName());
+        $pdo = $driver->getPdo();
+
+        $statement = $pdo->query('SELECT version FROM ' . $table . ' WHERE upgradeEnd IS NULL LIMIT 1');
+        $version = $statement->fetchColumn();
+
+        return ($version === false) ? null : (int) $version;
     }
 
     /**
