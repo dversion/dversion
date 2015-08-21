@@ -6,7 +6,7 @@
     "require": {
         "php": ">=5.3",
         "ext-pdo": "*",
-        "symfony/console": "2.5.*"
+        "symfony/console": "~2.5"
     },
     "autoload": {
         "psr-4": {
