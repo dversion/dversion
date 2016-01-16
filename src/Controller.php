@@ -471,8 +471,9 @@ class Controller
 
         $statement = $pdo->query('SELECT version FROM ' . $table . ' ORDER BY version DESC LIMIT 1');
         $version = $statement->fetchColumn();
+
         if ($version === false) {
-            throw new \RuntimeException('Error: cannot determine the current database version.');
+            return 0;
         }
 
         return (int) $version;
