@@ -22,7 +22,7 @@ class InitCommand extends AbstractCommand
         $this
             ->setName('init')
             ->setDescription('Initialize the versioning table on a legacy database')
-            ->addArgument('version', InputArgument::REQUIRED, 'The version the legacy database corresponds to');
+            ->addArgument('version', InputArgument::OPTIONAL, 'The version the legacy database corresponds to');
         ;
     }
 
@@ -31,8 +31,14 @@ class InitCommand extends AbstractCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        return $this->getController($output)->init(
-            (int) $input->getArgument('version')
-        );
+        $version = $input->getArgument('version');
+
+        if ($version === null) {
+            $version = 0;
+        } else {
+            $version = (int) $version;
+        }
+
+        return $this->getController($output)->init($version);
     }
 }

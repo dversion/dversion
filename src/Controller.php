@@ -58,7 +58,7 @@ class Controller
     }
 
     /**
-     * @param integer $version
+     * @param integer $version The database version when using an existing database, 0 for a pristine database.
      *
      * @return integer
      */
