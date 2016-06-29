@@ -15,16 +15,14 @@ class Dumper
 
     /**
      * All the database object types.
-     *
-     * @var array
      */
-    private static $objectTypes = array(
+    const OBJECT_TYPES = [
         self::OBJECT_TABLE,
         self::OBJECT_VIEW,
         self::OBJECT_TRIGGER,
         self::OBJECT_PROCEDURE,
         self::OBJECT_FUNCTION
-    );
+    ];
 
     /**
      * @var \Dversion\Driver
@@ -53,14 +51,14 @@ class Dumper
      *
      * @return void
      */
-    public function dumpTableData($name, $output)
+    public function dumpTableData(string $name, callable $output)
     {
         $name = $this->driver->quoteIdentifier($name);
         $statement = $this->pdo->query('SELECT * FROM ' . $name);
 
         while ($row = $statement->fetch(\PDO::FETCH_ASSOC)) {
-            $keys = array();
-            $values = array();
+            $keys = [];
+            $values = [];
 
             foreach ($row as $key => $value) {
                 $keys[] = $this->driver->quoteIdentifier($key);
@@ -81,13 +79,13 @@ class Dumper
      *
      * @return void
      */
-    public function dumpDatabase($output)
+    public function dumpDatabase(callable $output)
     {
         foreach ($this->driver->getPreDumpSql() as $sql) {
             $output($sql);
         }
 
-        foreach (self::$objectTypes as $objectType) {
+        foreach (self::OBJECT_TYPES as $objectType) {
             foreach ($this->driver->getObjects($objectType) as $name) {
                 $output($this->driver->getCreateSql($objectType, $name));
 
@@ -109,11 +107,11 @@ class Dumper
      *
      * @return void
      */
-    public function countObjects($output)
+    public function countObjects(callable $output)
     {
         $output(count($this->driver->getPreDumpSql()));
 
-        foreach (self::$objectTypes as $objectType) {
+        foreach (self::OBJECT_TYPES as $objectType) {
             $objects = $this->driver->getObjects($objectType);
             $output(count($objects));
 
@@ -134,7 +132,7 @@ class Dumper
      *
      * @return string
      */
-    private function quote($value)
+    private function quote($value) : string
     {
         if ($value === null) {
             return 'NULL';

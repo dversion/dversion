@@ -14,14 +14,14 @@ interface Driver
      *
      * @return \PDO
      */
-    public function getPdo();
+    public function getPdo() : \PDO;
 
     /**
      * Returns the current database name of the underlying PDO connection.
      *
      * @return string
      */
-    public function getDatabaseName();
+    public function getDatabaseName() : string;
 
     /**
      * Lists all objects of the given type in the current database.
@@ -32,7 +32,7 @@ interface Driver
      *
      * @return array The object names.
      */
-    public function getObjects($type);
+    public function getObjects(string $type) : array;
 
     /**
      * Returns the SQL to create the object of the given type and name.
@@ -45,7 +45,7 @@ interface Driver
      *
      * @return string
      */
-    public function getCreateSql($type, $name);
+    public function getCreateSql(string $type, string $name) : string;
 
     /**
      * Creates the version table.
@@ -57,14 +57,14 @@ interface Driver
      *
      * @return void
      */
-    public function createVersionTable($name);
+    public function createVersionTable(string $name);
 
     /**
      * Returns the list of available databases.
      *
      * @return array
      */
-    public function listDatabases();
+    public function listDatabases() : array;
 
     /**
      * Creates a database of the given name.
@@ -73,7 +73,7 @@ interface Driver
      *
      * @return \Dversion\Driver A new driver instance to work with the newly created database.
      */
-    public function createDatabase($name);
+    public function createDatabase(string $name) : Driver;
 
     /**
      * Drops the database of the given name.
@@ -85,21 +85,21 @@ interface Driver
      *
      * @return void
      */
-    public function dropDatabase($name);
+    public function dropDatabase(string $name);
 
     /**
      * Returns an array of SQL statements to insert before the database dump.
      *
      * @return array
      */
-    public function getPreDumpSql();
+    public function getPreDumpSql() : array;
 
     /**
      * Returns an array of SQL statements to insert after the database dump.
      *
      * @return array
      */
-    public function getPostDumpSql();
+    public function getPostDumpSql() : array;
 
     /**
      * Quotes an identifier such as a table name or field name.
@@ -108,5 +108,5 @@ interface Driver
      *
      * @return string
      */
-    public function quoteIdentifier($name);
+    public function quoteIdentifier(string $name) : string;
 }

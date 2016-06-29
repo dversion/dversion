@@ -35,7 +35,7 @@ class Configuration
      *
      * @return \Dversion\Configuration
      */
-    public static function create(Driver $driver)
+    public static function create(Driver $driver) : Configuration
     {
         return new Configuration($driver);
     }
@@ -45,7 +45,7 @@ class Configuration
      *
      * @return \Dversion\Configuration
      */
-    public function setVersionTableName($name)
+    public function setVersionTableName(string $name) : Configuration
     {
         $this->versionTableName = $name;
 
@@ -57,7 +57,7 @@ class Configuration
      *
      * @return \Dversion\Configuration
      */
-    public function setSqlDirectory($directory)
+    public function setSqlDirectory(string $directory) : Configuration
     {
         $this->sqlDirectory = $directory;
 
@@ -67,7 +67,7 @@ class Configuration
     /**
      * @return \Dversion\Driver
      */
-    public function getDriver()
+    public function getDriver() : Driver
     {
         return $this->driver;
     }
@@ -75,7 +75,7 @@ class Configuration
     /**
      * @return string
      */
-    public function getVersionTableName()
+    public function getVersionTableName() : string
     {
         return $this->versionTableName;
     }
@@ -83,7 +83,7 @@ class Configuration
     /**
      * @return string
      */
-    public function getSqlDirectory()
+    public function getSqlDirectory() : string
     {
         return $this->sqlDirectory;
     }

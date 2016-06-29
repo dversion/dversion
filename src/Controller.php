@@ -31,9 +31,9 @@ class Controller
     }
 
     /**
-     * @return integer
+     * @return int
      */
-    public function status()
+    public function status() : int
     {
         $driver = $this->configuration->getDriver();
 
@@ -58,11 +58,11 @@ class Controller
     }
 
     /**
-     * @param integer $version The database version when using an existing database, 0 for a pristine database.
+     * @param int $version The database version when using an existing database, 0 for a pristine database.
      *
-     * @return integer
+     * @return void
      */
-    public function init($version)
+    public function init(int $version)
     {
         $targetDriver = $this->configuration->getDriver();
 
@@ -79,11 +79,11 @@ class Controller
     }
 
     /**
-     * @param boolean $test
+     * @param bool $test
      *
-     * @return integer
+     * @return int
      */
-    public function update($test)
+    public function update(bool $test) : int
     {
         $temporaryDatabaseName = $this->getTemporaryDatabaseName();
 
@@ -120,13 +120,13 @@ class Controller
     }
 
     /**
-     * @param boolean $resume
-     * @param boolean $test
-     * @param integer $version
+     * @param bool     $resume
+     * @param bool     $test
+     * @param int|null $version
      *
-     * @return integer
+     * @return int
      */
-    public function reset(bool $resume, bool $test, int $version = null)
+    public function reset(bool $resume, bool $test, int $version = null) : int
     {
         if ($test) {
             $targetDatabaseName = $this->getTemporaryDatabaseName();
@@ -161,11 +161,11 @@ class Controller
     }
 
     /**
-     * @param boolean $resume
+     * @param bool $resume
      *
-     * @return integer
+     * @return int
      */
-    public function createResumePoint($resume)
+    public function createResumePoint(bool $resume) : int
     {
         $targetDatabaseName = $this->getTemporaryDatabaseName();
         $targetDriver = $this->createDatabase($targetDatabaseName);
@@ -190,9 +190,9 @@ class Controller
     }
 
     /**
-     * @return integer
+     * @return int
      */
-    public function cleanup()
+    public function cleanup() : int
     {
         $driver = $this->configuration->getDriver();
         $databases = $driver->listDatabases();
@@ -209,9 +209,9 @@ class Controller
     /**
      * @param string $direction
      *
-     * @return integer
+     * @return int
      */
-    public function resolve($direction)
+    public function resolve(string $direction) : int
     {
         $driver = $this->configuration->getDriver();
 
@@ -227,13 +227,13 @@ class Controller
         switch ($direction) {
             case 'backward':
                 $statement = $pdo->prepare("DELETE FROM $table WHERE version = ?");
-                $statement->execute(array($version));
+                $statement->execute([$version]);
                 $version--;
                 break;
 
             case 'forward':
                 $statement = $pdo->prepare("UPDATE $table SET upgradeEnd = CURRENT_TIMESTAMP() WHERE version = ?");
-                $statement->execute(array($version));
+                $statement->execute([$version]);
                 break;
 
             default:
@@ -249,13 +249,13 @@ class Controller
     }
 
     /**
-     * @param Driver  $targetDriver
-     * @param integer $currentVersion
-     * @param integer $latestVersion
+     * @param Driver $targetDriver
+     * @param int    $currentVersion
+     * @param int    $latestVersion
      *
      * @return void
      */
-    private function runUpdates(Driver $targetDriver, $currentVersion, $latestVersion)
+    private function runUpdates(Driver $targetDriver, int $currentVersion, int $latestVersion)
     {
         $progress = new ProgressBar($this->output, $latestVersion - $currentVersion);
         $progress->setFormat('%message% [%bar%] %version% %percent:3s%%');
@@ -284,7 +284,7 @@ class Controller
      *
      * @return Driver
      */
-    private function createDatabase($name)
+    private function createDatabase(string $name) : Driver
     {
         $this->output->writeln('Creating database ' . $name);
 
@@ -298,7 +298,7 @@ class Controller
      *
      * @return void
      */
-    private function dropDatabase($name)
+    private function dropDatabase(string $name)
     {
         $this->output->writeln('Dropping database ' . $name);
 
@@ -324,7 +324,7 @@ class Controller
      *
      * @return void
      */
-    private function doDumpDatabase(Driver $sourceDriver, $output, $message)
+    private function doDumpDatabase(Driver $sourceDriver, callable $output, string $message)
     {
         $dumper = new Dumper($sourceDriver);
 
@@ -358,11 +358,11 @@ class Controller
     }
 
     /**
-     * @return integer
+     * @return int
      *
      * @throws \RuntimeException
      */
-    private function getLatestDatabaseVersion()
+    private function getLatestDatabaseVersion() : int
     {
         $versions = $this->getFileVersions($this->getSqlPath(), 'sql');
         $latestVersion = end($versions);
@@ -375,11 +375,11 @@ class Controller
     }
 
     /**
-     * @return integer
+     * @return int
      *
      * @throws \RuntimeException
      */
-    private function getDumpVersion()
+    private function getDumpVersion() : int
     {
         $versions = $this->getFileVersions($this->getSqlDumpPath(), 'tar');
 
@@ -396,10 +396,10 @@ class Controller
      *
      * @return array
      */
-    private function getFileVersions($directory, $extension)
+    private function getFileVersions(string $directory, string $extension) : array
     {
         $files = new \DirectoryIterator($directory);
-        $versions = array();
+        $versions = [];
 
         foreach ($files as $file) {
             if ($file->isFile() && $file->getExtension() == $extension) {
@@ -421,7 +421,7 @@ class Controller
     /**
      * @return string
      */
-    private function getSqlPath()
+    private function getSqlPath() : string
     {
         return $this->configuration->getSqlDirectory();
     }
@@ -429,7 +429,7 @@ class Controller
     /**
      * @return string
      */
-    private function getSqlDumpPath()
+    private function getSqlDumpPath() : string
     {
         return $this->getSqlPath() . '/dump';
     }
@@ -440,7 +440,7 @@ class Controller
      *
      * @return void
      */
-    private function importSqlFile(\PDO $pdo, $file)
+    private function importSqlFile(\PDO $pdo, string $file)
     {
         $sql = file_get_contents($file);
         $statement = $pdo->query($sql);
@@ -453,11 +453,11 @@ class Controller
     /**
      * @param Driver $driver
      *
-     * @return integer
+     * @return int
      *
      * @throws \RuntimeException
      */
-    private function getCurrentDatabaseVersion(Driver $driver)
+    private function getCurrentDatabaseVersion(Driver $driver) : int
     {
         $table = $driver->quoteIdentifier($this->configuration->getVersionTableName());
         $pdo = $driver->getPdo();
@@ -485,7 +485,7 @@ class Controller
     /**
      * @param Driver $driver
      *
-     * @return integer|null The failed database version, or null if no update has failed.
+     * @return int|null The failed database version, or null if no update has failed.
      */
     private function getFailedDatabaseVersion(Driver $driver)
     {
@@ -499,12 +499,12 @@ class Controller
     }
 
     /**
-     * @param Driver  $driver
-     * @param integer $version
+     * @param Driver $driver
+     * @param int    $version
      *
      * @return void
      */
-    private function doCreateResumePoint(Driver $driver, $version)
+    private function doCreateResumePoint(Driver $driver, int $version)
     {
         $directory = $this->getTemporaryName();
         mkdir($directory);
@@ -539,11 +539,11 @@ class Controller
      * @param Driver   $driver
      * @param int|null $version
      *
-     * @return integer The version resumed.
+     * @return int The version resumed.
      *
      * @throws \RuntimeException
      */
-    private function resume(Driver $driver, int $version = null)
+    private function resume(Driver $driver, int $version = null) : int
     {
         if ($version === null) {
             $version = $this->getDumpVersion();
@@ -575,12 +575,12 @@ class Controller
     }
 
     /**
-     * @param string  $directory
-     * @param integer $version
+     * @param string $directory
+     * @param int    $version
      *
      * @return string
      */
-    public function getSqlFilePath($directory, $version)
+    public function getSqlFilePath(string $directory, int $version) : string
     {
         return $directory . DIRECTORY_SEPARATOR . sprintf('%06u.sql', $version);
     }
@@ -588,7 +588,7 @@ class Controller
     /**
      * @return string
      */
-    private function getTemporaryName()
+    private function getTemporaryName() : string
     {
         do {
             $directory = sys_get_temp_dir() . DIRECTORY_SEPARATOR . uniqid('dversion_');
@@ -599,35 +599,35 @@ class Controller
     }
 
     /**
-     * @param Driver  $driver  The target driver.
-     * @param integer $version The version being applied.
+     * @param Driver $driver  The target driver.
+     * @param int    $version The version being applied.
      *
      * @return void
      */
-    private function startUpdate(Driver $driver, $version)
+    private function startUpdate(Driver $driver, int $version)
     {
         $pdo = $driver->getPdo();
         $table = $driver->quoteIdentifier($this->configuration->getVersionTableName());
 
         $statement = $pdo->prepare("INSERT INTO $table (version) VALUES (?)");
-        $statement->execute(array($version));
+        $statement->execute([$version]);
     }
 
     /**
-     * @param Driver  $driver  The target driver.
-     * @param integer $version The version being applied.
+     * @param Driver $driver  The target driver.
+     * @param int    $version The version being applied.
      *
      * @return void
      *
      * @throws \RuntimeException
      */
-    private function endUpdate(Driver $driver, $version)
+    private function endUpdate(Driver $driver, int $version)
     {
         $pdo = $driver->getPdo();
         $table = $driver->quoteIdentifier($this->configuration->getVersionTableName());
 
         $statement = $pdo->prepare("UPDATE $table SET upgradeEnd = CURRENT_TIMESTAMP() WHERE version = ?");
-        $statement->execute(array($version));
+        $statement->execute([$version]);
 
         if ($statement->rowCount() != 1) {
             throw new \RuntimeException('Unexpected number of affected rows');
@@ -637,7 +637,7 @@ class Controller
     /**
      * @return string
      */
-    private function getTemporaryDatabaseName()
+    private function getTemporaryDatabaseName() : string
     {
         return 'temp_' . time();
     }
@@ -645,7 +645,7 @@ class Controller
     /**
      * @return string
      */
-    private function getTemporaryDatabasePattern()
+    private function getTemporaryDatabasePattern() : string
     {
         return '/^temp_[0-9]{10}$/';
     }

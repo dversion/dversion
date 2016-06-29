@@ -57,7 +57,7 @@ class MySqlDriver implements Driver
      * @param string|null $charset   An optional charset for the connection and default charset for new databases.
      * @param string|null $collation An optional default collation for new databases.
      */
-    public function __construct($host, $username, $password, $database, $charset = null, $collation = null)
+    public function __construct(string $host, string $username, string $password, string $database, string $charset = null, string $collation = null)
     {
         $this->host      = $host;
         $this->username  = $username;
@@ -92,7 +92,7 @@ class MySqlDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function getPdo()
+    public function getPdo() : \PDO
     {
         return $this->pdo;
     }
@@ -100,7 +100,7 @@ class MySqlDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function getDatabaseName()
+    public function getDatabaseName() : string
     {
         return $this->database;
     }
@@ -108,7 +108,7 @@ class MySqlDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function getObjects($type)
+    public function getObjects(string $type) : array
     {
         switch ($type) {
             case Dumper::OBJECT_TABLE:
@@ -127,13 +127,13 @@ class MySqlDriver implements Driver
                 return $this->fetchArray('SHOW FUNCTION STATUS WHERE Db = (SELECT DATABASE())', 1);
         }
 
-        return array();
+        return [];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getCreateSql($type, $name)
+    public function getCreateSql(string $type, string $name) : string
     {
         switch ($type) {
             case Dumper::OBJECT_TABLE:
@@ -158,7 +158,7 @@ class MySqlDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function createVersionTable($name)
+    public function createVersionTable(string $name)
     {
         $name = $this->quoteIdentifier($name);
 
@@ -175,7 +175,7 @@ class MySqlDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function listDatabases()
+    public function listDatabases() : array
     {
         return $this->fetchArray('SHOW DATABASES', 0);
     }
@@ -183,7 +183,7 @@ class MySqlDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function createDatabase($name)
+    public function createDatabase(string $name) : Driver
     {
         return new MySqlDriver($this->host, $this->username, $this->password, $name, $this->charset, $this->collation);
     }
@@ -191,7 +191,7 @@ class MySqlDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function dropDatabase($name)
+    public function dropDatabase(string $name)
     {
         $this->pdo->exec('DROP DATABASE IF EXISTS ' . $this->quoteIdentifier($name));
     }
@@ -199,23 +199,23 @@ class MySqlDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function getPreDumpSql()
+    public function getPreDumpSql() : array
     {
-        return array('SET foreign_key_checks = 0;');
+        return ['SET foreign_key_checks = 0;'];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getPostDumpSql()
+    public function getPostDumpSql() : array
     {
-        return array('SET foreign_key_checks = 1;');
+        return ['SET foreign_key_checks = 1;'];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function quoteIdentifier($name)
+    public function quoteIdentifier(string $name) : string
     {
         return '`' . str_replace('`', '``', $name) . '`';
     }
@@ -223,24 +223,24 @@ class MySqlDriver implements Driver
     /**
      * Executes the given query and returns the data in the given column index.
      *
-     * @param string  $query  The query to execute.
-     * @param integer $column The column index to return.
+     * @param string $query  The query to execute.
+     * @param int    $column The column index to return.
      *
      * @return array
      */
-    private function fetchArray($query, $column)
+    private function fetchArray(string $query, int $column) : array
     {
         return $this->pdo->query($query)->fetchAll(\PDO::FETCH_COLUMN, $column);
     }
 
     /**
-     * @param string  $query  The query to execute.
-     * @param integer $column The column index to return.
-     * @param string  $name   The object name to quote and add to the query.
+     * @param string $query  The query to execute.
+     * @param int    $column The column index to return.
+     * @param string $name   The object name to quote and add to the query.
      *
      * @return string
      */
-    private function fetchColumn($query, $column, $name)
+    private function fetchColumn(string $query, int $column, string $name) : string
     {
         $name = $this->quoteIdentifier($name);
 
