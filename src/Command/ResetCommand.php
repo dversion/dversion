@@ -31,7 +31,13 @@ class ResetCommand extends AbstractCommand
                 'test',
                 null,
                 InputOption::VALUE_NONE,
-                'Test all the patches against a blank database.'
+                'Test all the patches against a blank database'
+            )
+            ->addOption(
+                'to-version',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Specify the version to stop at'
             )
         ;
     }
@@ -42,8 +48,9 @@ class ResetCommand extends AbstractCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         return $this->getController($output)->reset(
-            (bool) $input->getOption('resume'),
-            (bool) $input->getOption('test')
+            $input->getOption('resume'),
+            $input->getOption('test'),
+            $input->getOption('to-version')
         );
     }
 }

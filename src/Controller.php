@@ -122,10 +122,11 @@ class Controller
     /**
      * @param boolean $resume
      * @param boolean $test
+     * @param integer $version
      *
      * @return integer
      */
-    public function reset($resume, $test)
+    public function reset(bool $resume, bool $test, int $version = null)
     {
         if ($test) {
             $targetDatabaseName = $this->getTemporaryDatabaseName();
@@ -137,16 +138,18 @@ class Controller
         $targetDriver = $this->createDatabase($targetDatabaseName);
 
         if ($resume) {
-            $currentVersion = $this->resume($targetDriver);
+            $currentVersion = $this->resume($targetDriver, $version);
         } else {
             $this->output->writeln('Creating the versioning table');
             $targetDriver->createVersionTable($this->configuration->getVersionTableName());
             $currentVersion = 0;
         }
 
-        $latestVersion = $this->getLatestDatabaseVersion();
+        if ($version === null) {
+            $version = $this->getLatestDatabaseVersion();
+        }
 
-        $this->runUpdates($targetDriver, $currentVersion, $latestVersion);
+        $this->runUpdates($targetDriver, $currentVersion, $version);
 
         if ($test) {
             $this->dropDatabase($targetDatabaseName);
@@ -533,15 +536,19 @@ class Controller
     /**
      * Resumes the latest database dump.
      *
-     * @param Driver $driver
+     * @param Driver   $driver
+     * @param int|null $version
      *
      * @return integer The version resumed.
      *
      * @throws \RuntimeException
      */
-    private function resume(Driver $driver)
+    private function resume(Driver $driver, int $version = null)
     {
-        $version = $this->getDumpVersion();
+        if ($version === null) {
+            $version = $this->getDumpVersion();
+        }
+
         $this->output->writeln('Resuming at version ' . $version);
         $archivePath = $this->getSqlDumpPath() . '/' . $version . '.tar';
 

@@ -4,7 +4,7 @@
     "keywords": ["database", "versioning"],
     "license": "MIT",
     "require": {
-        "php": ">=5.3",
+        "php": ">=7",
         "ext-pdo": "*",
         "symfony/console": "~2.5"
     },
