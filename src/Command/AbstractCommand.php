@@ -36,7 +36,7 @@ abstract class AbstractCommand extends Command
      *
      * @return \Dversion\Controller
      */
-    final public function getController(OutputInterface $output)
+    final public function getController(OutputInterface $output) : Controller
     {
         return new Controller($this->configuration, $output);
     }

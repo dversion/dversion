@@ -158,7 +158,7 @@ class MySqlDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function createVersionTable(string $name)
+    public function createVersionTable(string $name) : void
     {
         $name = $this->quoteIdentifier($name);
 
@@ -191,7 +191,7 @@ class MySqlDriver implements Driver
     /**
      * {@inheritdoc}
      */
-    public function dropDatabase(string $name)
+    public function dropDatabase(string $name) : void
     {
         $this->pdo->exec('DROP DATABASE IF EXISTS ' . $this->quoteIdentifier($name));
     }

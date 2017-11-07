@@ -51,7 +51,7 @@ class Dumper
      *
      * @return void
      */
-    public function dumpTableData(string $name, callable $output)
+    public function dumpTableData(string $name, callable $output) : void
     {
         $name = $this->driver->quoteIdentifier($name);
         $statement = $this->pdo->query('SELECT * FROM ' . $name);
@@ -79,7 +79,7 @@ class Dumper
      *
      * @return void
      */
-    public function dumpDatabase(callable $output)
+    public function dumpDatabase(callable $output) : void
     {
         foreach ($this->driver->getPreDumpSql() as $sql) {
             $output($sql);
@@ -107,7 +107,7 @@ class Dumper
      *
      * @return void
      */
-    public function countObjects(callable $output)
+    public function countObjects(callable $output) : void
     {
         $output(count($this->driver->getPreDumpSql()));
 

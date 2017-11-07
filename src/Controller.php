@@ -62,7 +62,7 @@ class Controller
      *
      * @return void
      */
-    public function init(int $version)
+    public function init(int $version) : void
     {
         $targetDriver = $this->configuration->getDriver();
 
@@ -255,7 +255,7 @@ class Controller
      *
      * @return void
      */
-    private function runUpdates(Driver $targetDriver, int $currentVersion, int $latestVersion)
+    private function runUpdates(Driver $targetDriver, int $currentVersion, int $latestVersion) : void
     {
         $progress = new ProgressBar($this->output, $latestVersion - $currentVersion);
         $progress->setFormat('%message% [%bar%] %version% %percent:3s%%');
@@ -298,7 +298,7 @@ class Controller
      *
      * @return void
      */
-    private function dropDatabase(string $name)
+    private function dropDatabase(string $name) : void
     {
         $this->output->writeln('Dropping database ' . $name);
 
@@ -310,7 +310,7 @@ class Controller
      *
      * @return void
      */
-    private function copyDatabase(Driver $targetDriver)
+    private function copyDatabase(Driver $targetDriver) : void
     {
         $this->doDumpDatabase($this->configuration->getDriver(), function($query) use ($targetDriver) {
             $targetDriver->getPdo()->exec($query);
@@ -324,7 +324,7 @@ class Controller
      *
      * @return void
      */
-    private function doDumpDatabase(Driver $sourceDriver, callable $output, string $message)
+    private function doDumpDatabase(Driver $sourceDriver, callable $output, string $message) : void
     {
         $dumper = new Dumper($sourceDriver);
 
@@ -440,7 +440,7 @@ class Controller
      *
      * @return void
      */
-    private function importSqlFile(\PDO $pdo, string $file)
+    private function importSqlFile(\PDO $pdo, string $file) : void
     {
         $sql = file_get_contents($file);
         $statement = $pdo->query($sql);
@@ -487,7 +487,7 @@ class Controller
      *
      * @return int|null The failed database version, or null if no update has failed.
      */
-    private function getFailedDatabaseVersion(Driver $driver)
+    private function getFailedDatabaseVersion(Driver $driver) : ?int
     {
         $table = $driver->quoteIdentifier($this->configuration->getVersionTableName());
         $pdo = $driver->getPdo();
@@ -504,7 +504,7 @@ class Controller
      *
      * @return void
      */
-    private function doCreateResumePoint(Driver $driver, int $version)
+    private function doCreateResumePoint(Driver $driver, int $version) : void
     {
         $directory = $this->getTemporaryName();
         mkdir($directory);
@@ -604,7 +604,7 @@ class Controller
      *
      * @return void
      */
-    private function startUpdate(Driver $driver, int $version)
+    private function startUpdate(Driver $driver, int $version) : void
     {
         $pdo = $driver->getPdo();
         $table = $driver->quoteIdentifier($this->configuration->getVersionTableName());
@@ -621,7 +621,7 @@ class Controller
      *
      * @throws \RuntimeException
      */
-    private function endUpdate(Driver $driver, int $version)
+    private function endUpdate(Driver $driver, int $version) : void
     {
         $pdo = $driver->getPdo();
         $table = $driver->quoteIdentifier($this->configuration->getVersionTableName());

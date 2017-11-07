@@ -57,7 +57,7 @@ interface Driver
      *
      * @return void
      */
-    public function createVersionTable(string $name);
+    public function createVersionTable(string $name) : void;
 
     /**
      * Returns the list of available databases.
@@ -85,7 +85,7 @@ interface Driver
      *
      * @return void
      */
-    public function dropDatabase(string $name);
+    public function dropDatabase(string $name) : void;
 
     /**
      * Returns an array of SQL statements to insert before the database dump.
