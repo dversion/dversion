@@ -89,7 +89,7 @@ class Dumper
             foreach ($this->driver->getObjects($objectType) as $name) {
                 $output($this->driver->getCreateSql($objectType, $name));
 
-                if ($objectType == self::OBJECT_TABLE) {
+                if ($objectType === self::OBJECT_TABLE) {
                     $this->dumpTableData($name, $output);
                 }
             }
@@ -115,7 +115,7 @@ class Dumper
             $objects = $this->driver->getObjects($objectType);
             $output(count($objects));
 
-            if ($objectType == self::OBJECT_TABLE) {
+            if ($objectType === self::OBJECT_TABLE) {
                 foreach ($objects as $tableName) {
                     $tableName = $this->driver->quoteIdentifier($tableName);
                     $rows = $this->pdo->query("SELECT COUNT(*) FROM $tableName")->fetchColumn();

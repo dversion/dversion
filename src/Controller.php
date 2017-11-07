@@ -103,7 +103,7 @@ class Controller
             $this->output->writeln('The database version is greater than the latest revision file.');
             $this->output->writeln('You should probably update your working copy.');
             $returnCode = 1;
-        } elseif ($currentVersion == $latestVersion) {
+        } elseif ($currentVersion === $latestVersion) {
             $this->output->writeln('The database is up to date!');
             $returnCode = 0;
         } else {
@@ -383,7 +383,7 @@ class Controller
     {
         $versions = $this->getFileVersions($this->getSqlDumpPath(), 'tar');
 
-        if (count($versions) == 0) {
+        if (count($versions) === 0) {
             throw new \RuntimeException('Cannot find SQL dump file');
         }
 
@@ -402,7 +402,7 @@ class Controller
         $versions = [];
 
         foreach ($files as $file) {
-            if ($file->isFile() && $file->getExtension() == $extension) {
+            if ($file->isFile() && $file->getExtension() === $extension) {
                 $filename = pathinfo($file->getFilename(), PATHINFO_FILENAME);
 
                 if (ctype_digit($filename)) {
@@ -567,7 +567,7 @@ class Controller
         $progress->finish();
         $this->output->writeln('');
 
-        if ($version != $this->getCurrentDatabaseVersion($driver)) {
+        if ($version !== $this->getCurrentDatabaseVersion($driver)) {
             throw new \RuntimeException('Error resuming version ' . $version);
         }
 
@@ -629,7 +629,7 @@ class Controller
         $statement = $pdo->prepare("UPDATE $table SET upgradeEnd = CURRENT_TIMESTAMP() WHERE version = ?");
         $statement->execute([$version]);
 
-        if ($statement->rowCount() != 1) {
+        if ($statement->rowCount() !== 1) {
             throw new \RuntimeException('Unexpected number of affected rows');
         }
     }
