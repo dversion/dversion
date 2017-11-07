@@ -4,7 +4,6 @@ namespace Dversion\Command;
 
 use Dversion\Configuration;
 use Dversion\Controller;
-use Dversion\Driver;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Output\OutputInterface;

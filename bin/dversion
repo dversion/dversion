@@ -1,7 +1,6 @@
 #!/usr/bin/env php
 <?php
 
-use Dversion\Driver;
 use Dversion\Command;
 
 use Symfony\Component\Console\Application;
