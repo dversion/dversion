@@ -288,9 +288,7 @@ class Controller
     {
         $this->output->writeln('Creating database ' . $name);
 
-        $driver = $this->configuration->getDriver()->createDatabase($name);
-
-        return $driver;
+        return $this->configuration->getDriver()->createDatabase($name);
     }
 
     /**
