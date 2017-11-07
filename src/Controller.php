@@ -337,7 +337,7 @@ class Controller
 
         $dumper->countObjects(function($count) use ($progress, & $objectCount) {
             $objectCount += $count;
-            $progress->setCurrent($objectCount);
+            $progress->setProgress($objectCount);
         });
 
         $progress->finish();
