@@ -36,6 +36,6 @@ class InitCommand extends AbstractCommand
             $version = (int) $version;
         }
 
-        return $this->getController($output)->init($version);
+        $this->getController($output)->init($version);
     }
 }
