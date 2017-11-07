@@ -138,7 +138,7 @@ class Dumper
             return 'NULL';
         }
 
-        if (is_integer($value)) {
+        if (is_int($value)) {
             return (string) $value;
         }
 
