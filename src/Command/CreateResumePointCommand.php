@@ -25,6 +25,12 @@ class CreateResumePointCommand extends AbstractCommand
                 InputOption::VALUE_NONE,
                 'Resume from the latest resume point'
             )
+            ->addOption(
+                'at-version',
+                null,
+                InputOption::VALUE_REQUIRED,
+                'Specify the resume point version to create (defaults to latest version)'
+            )
         ;
     }
 
@@ -34,7 +40,8 @@ class CreateResumePointCommand extends AbstractCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         return $this->getController($output)->createResumePoint(
-            (bool) $input->getOption('resume')
+            (bool) $input->getOption('resume'),
+            $input->getOption('at-version')
         );
     }
 }

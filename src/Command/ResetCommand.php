@@ -35,7 +35,7 @@ class ResetCommand extends AbstractCommand
                 'to-version',
                 null,
                 InputOption::VALUE_REQUIRED,
-                'Specify the version to stop at'
+                'Specify the version to reset to'
             )
         ;
     }

@@ -161,11 +161,14 @@ class Controller
     }
 
     /**
-     * @param bool $resume
+     * @param bool     $resume  Whether to resume from the latest resume point.
+     * @param int|null $version The version number of the resume point to create. Defaults to the latest version.
      *
      * @return int
+     *
+     * @throws \RuntimeException
      */
-    public function createResumePoint(bool $resume) : int
+    public function createResumePoint(bool $resume, int $version = null) : int
     {
         $targetDatabaseName = $this->getTemporaryDatabaseName();
         $targetDriver = $this->createDatabase($targetDatabaseName);
@@ -178,10 +181,23 @@ class Controller
             $currentVersion = 0;
         }
 
-        $latestVersion = $this->getLatestDatabaseVersion();
+        if ($version === null) {
+            $version = $this->getLatestDatabaseVersion();
+        } else {
+            if ($version < 1) {
+                throw new \RuntimeException('Invalid version number.');
+            }
 
-        $this->runUpdates($targetDriver, $currentVersion, $latestVersion);
-        $this->doCreateResumePoint($targetDriver, $latestVersion);
+            if ($version < $currentVersion) {
+                throw new \RuntimeException(sprintf(
+                    'The requested version (%d) is older than the resume point version (%d).' . PHP_EOL .
+                    'Retry without --resume', $version, $currentVersion
+                ));
+            }
+        }
+
+        $this->runUpdates($targetDriver, $currentVersion, $version);
+        $this->doCreateResumePoint($targetDriver, $version);
         $this->dropDatabase($targetDatabaseName);
 
         $this->output->writeln('Success!');
