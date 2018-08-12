@@ -25,7 +25,7 @@ class Configuration
     /**
      * @var bool
      */
-    private $devMode = true;
+    private $devMode = false;
 
     /**
      * @param \Dversion\Driver $driver
