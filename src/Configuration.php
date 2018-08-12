@@ -23,6 +23,11 @@ class Configuration
     private $sqlDirectory = 'sql';
 
     /**
+     * @var bool
+     */
+    private $devMode = true;
+
+    /**
      * @param \Dversion\Driver $driver
      */
     public function __construct(Driver $driver)
@@ -65,6 +70,18 @@ class Configuration
     }
 
     /**
+     * @param bool $devMode
+     *
+     * @return \Dversion\Configuration
+     */
+    public function setDevMode(bool $devMode) : Configuration
+    {
+        $this->devMode = $devMode;
+
+        return $this;
+    }
+
+    /**
      * @return \Dversion\Driver
      */
     public function getDriver() : Driver
@@ -86,5 +103,13 @@ class Configuration
     public function getSqlDirectory() : string
     {
         return $this->sqlDirectory;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isDevMode() : bool
+    {
+        return $this->devMode;
     }
 }

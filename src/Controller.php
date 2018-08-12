@@ -64,6 +64,10 @@ class Controller
      */
     public function init(int $version) : void
     {
+        if (! $this->configuration->isDevMode()) {
+            throw new \RuntimeException('Dversion is running in production mode, this command can only be run in dev mode.');
+        }
+
         $targetDriver = $this->configuration->getDriver();
 
         $this->output->writeln('Creating the versioning table');
@@ -128,6 +132,10 @@ class Controller
      */
     public function reset(bool $resume, bool $test, int $version = null) : int
     {
+        if (! $test && ! $this->configuration->isDevMode()) {
+            throw new \RuntimeException('Dversion is running in production mode, this command can only be run in dev mode.');
+        }
+
         if ($test) {
             $targetDatabaseName = $this->getTemporaryDatabaseName();
         } else {
