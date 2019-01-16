@@ -334,7 +334,7 @@ class Controller
      */
     private function copyDatabase(Driver $targetDriver) : void
     {
-        $this->doDumpDatabase($this->configuration->getDriver(), function($query) use ($targetDriver) {
+        $this->doDumpDatabase($this->configuration->getDriver(), static function($query) use ($targetDriver) {
             $targetDriver->getPdo()->exec($query);
         }, 'Copying database');
     }
@@ -357,7 +357,7 @@ class Controller
 
         $objectCount = 0;
 
-        $dumper->countObjects(function($count) use ($progress, & $objectCount) {
+        $dumper->countObjects(static function($count) use ($progress, & $objectCount) {
             $objectCount += $count;
             $progress->setProgress($objectCount);
         });
@@ -370,7 +370,7 @@ class Controller
         $progress->setFormat('%message% [%bar%] %current%/%max% %percent:3s%%');
         $progress->start();
 
-        $dumper->dumpDatabase(function($query) use ($output, $progress) {
+        $dumper->dumpDatabase(static function($query) use ($output, $progress) {
             $output($query);
             $progress->advance();
         });
@@ -534,7 +534,7 @@ class Controller
         $number = 1;
         $that = $this;
 
-        $this->doDumpDatabase($driver, function($query) use ($that, $directory, & $number) {
+        $this->doDumpDatabase($driver, static function($query) use ($that, $directory, & $number) {
             file_put_contents($that->getSqlFilePath($directory, $number), $query);
             $number++;
         }, 'Dumping database');
