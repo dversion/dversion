@@ -60,9 +60,9 @@ class Controller
     /**
      * @param int $version The database version when using an existing database, 0 for a pristine database.
      *
-     * @return void
+     * @return int
      */
-    public function init(int $version) : void
+    public function init(int $version) : int
     {
         if (! $this->configuration->isDevMode()) {
             throw new \RuntimeException('Dversion is running in production mode, this command can only be run in dev mode.');
@@ -80,6 +80,8 @@ class Controller
         }
 
         $this->output->writeln('Success!');
+
+        return 0;
     }
 
     /**
