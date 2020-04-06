@@ -4,6 +4,8 @@ namespace Dversion;
 
 /**
  * The project configuration class.
+ *
+ * @internal
  */
 class Configuration
 {

@@ -8,6 +8,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Resets the database.
+ *
+ * @internal
  */
 class ResetCommand extends AbstractCommand
 {

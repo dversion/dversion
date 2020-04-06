@@ -4,6 +4,8 @@ namespace Dversion;
 
 /**
  * Utility class to dump a database.
+ *
+ * @internal
  */
 class Dumper
 {

@@ -7,6 +7,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Shows the status of the database.
+ *
+ * @internal
  */
 class StatusCommand extends AbstractCommand
 {

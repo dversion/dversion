@@ -8,6 +8,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Updates the database.
+ *
+ * @internal
  */
 class UpdateCommand extends AbstractCommand
 {

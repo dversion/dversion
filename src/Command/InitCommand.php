@@ -8,6 +8,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Initializes the versioning table on a legacy database.
+ *
+ * @internal
  */
 class InitCommand extends AbstractCommand
 {

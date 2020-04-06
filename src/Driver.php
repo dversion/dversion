@@ -4,6 +4,8 @@ namespace Dversion;
 
 /**
  * Interface that all database drivers must implement.
+ *
+ * @internal
  */
 interface Driver
 {

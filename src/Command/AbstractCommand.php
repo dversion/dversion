@@ -10,6 +10,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Base class for all commands.
+ *
+ * @internal
  */
 abstract class AbstractCommand extends Command
 {

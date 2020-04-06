@@ -8,6 +8,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Resolves a failed update.
+ *
+ * @internal
  */
 class ResolveCommand extends AbstractCommand
 {

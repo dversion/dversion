@@ -7,6 +7,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Holds the application logic.
+ *
+ * @internal
  */
 class Controller
 {
