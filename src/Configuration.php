@@ -4,10 +4,8 @@ namespace Dversion;
 
 /**
  * The project configuration class.
- *
- * @internal
  */
-class Configuration
+final class Configuration
 {
     /**
      * @var \Dversion\Driver

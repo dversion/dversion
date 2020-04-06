@@ -7,10 +7,8 @@ use Dversion\Driver;
 
 /**
  * Driver for MySQL databases.
- *
- * @internal
  */
-class MySqlDriver implements Driver
+final class MySqlDriver implements Driver
 {
     /**
      * @var string
