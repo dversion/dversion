@@ -11,16 +11,16 @@ namespace Dversion;
  */
 class Dumper
 {
-    const OBJECT_TABLE     = 'table';
-    const OBJECT_VIEW      = 'view';
-    const OBJECT_TRIGGER   = 'trigger';
-    const OBJECT_PROCEDURE = 'procedure';
-    const OBJECT_FUNCTION  = 'function';
+    public const OBJECT_TABLE     = 'table';
+    public const OBJECT_VIEW      = 'view';
+    public const OBJECT_TRIGGER   = 'trigger';
+    public const OBJECT_PROCEDURE = 'procedure';
+    public const OBJECT_FUNCTION  = 'function';
 
     /**
      * All the database object types.
      */
-    const OBJECT_TYPES = [
+    public const ALL_OBJECT_TYPES = [
         self::OBJECT_TABLE,
         self::OBJECT_VIEW,
         self::OBJECT_TRIGGER,
@@ -93,7 +93,7 @@ class Dumper
             $output($sql);
         }
 
-        foreach (self::OBJECT_TYPES as $objectType) {
+        foreach (self::ALL_OBJECT_TYPES as $objectType) {
             foreach ($this->driver->getObjects($objectType) as $name) {
                 $output($this->driver->getCreateSql($objectType, $name));
 
@@ -121,7 +121,7 @@ class Dumper
     {
         $output(count($this->driver->getPreDumpSql()));
 
-        foreach (self::OBJECT_TYPES as $objectType) {
+        foreach (self::ALL_OBJECT_TYPES as $objectType) {
             $objects = $this->driver->getObjects($objectType);
             $output(count($objects));
 

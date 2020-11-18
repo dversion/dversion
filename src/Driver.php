@@ -30,7 +30,9 @@ interface Driver
      *
      * If the platform doesn't support objects of the given type, an empty array must be returned.
      *
-     * @param string $type One of the Database::OBJECT_* constants.
+     * @psalm-param Dumper::OBJECT_* $type
+     *
+     * @param string $type One of the Dumper::OBJECT_* constants.
      *
      * @return string[] The object names.
      */
@@ -42,7 +44,9 @@ interface Driver
      * If the given type is not supported, or the given name does not exist,
      * an exception must be thrown.
      *
-     * @param string $type The object type, one of the Database::OBJECT_* constants.
+     * @psalm-param Dumper::OBJECT_* $type
+     *
+     * @param string $type The object type, one of the Dumper::OBJECT_* constants.
      * @param string $name The object name.
      *
      * @return string
