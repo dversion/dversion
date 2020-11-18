@@ -45,8 +45,10 @@ class ResolveCommand extends AbstractCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        return $this->getController($output)->resolve(
-            $input->getArgument('direction')
-        );
+        $direction = $input->getArgument('direction');
+
+        assert(is_string($direction));
+
+        return $this->getController($output)->resolve($direction);
     }
 }

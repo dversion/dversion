@@ -6,6 +6,7 @@ use Dversion\Configuration;
 use Dversion\Controller;
 
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
 /**
@@ -37,7 +38,7 @@ abstract class AbstractCommand extends Command
      *
      * @return \Dversion\Controller
      */
-    final public function getController(OutputInterface $output) : Controller
+    final protected function getController(OutputInterface $output) : Controller
     {
         return new Controller($this->configuration, $output);
     }
