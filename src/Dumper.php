@@ -50,6 +50,8 @@ class Dumper
     }
 
     /**
+     * @psalm-param callable(string): void $output
+     *
      * @param string   $name
      * @param callable $output
      *
@@ -78,6 +80,8 @@ class Dumper
 
     /**
      * Dumps the database to an output function.
+     *
+     * @psalm-param callable(string): void $output
      *
      * @param callable $output A function that will be called with every SQL statement.
      *
