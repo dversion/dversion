@@ -592,8 +592,7 @@ class Controller
         $progress->setFormat('%message% [%bar%] %current%/%max% %percent:3s%%');
         $progress->start();
 
-        /** @psalm-suppress MixedAssignment See: https://github.com/vimeo/psalm/issues/4601 */
-        foreach ($phar as $path => $file) {
+        foreach ($phar as $path => $_file) {
             $this->importSqlFile($driver->getPdo(), $path);
             $progress->advance();
         }
