@@ -18,6 +18,11 @@ final class MySqlDriver implements Driver
     private $host;
 
     /**
+     * @var int|null
+     */
+    private $port;
+
+    /**
      * @var string
      */
     private $username;
@@ -58,17 +63,23 @@ final class MySqlDriver implements Driver
      * @param string      $database  The MySQL database name.
      * @param string|null $charset   An optional charset for the connection and default charset for new databases.
      * @param string|null $collation An optional default collation for new databases.
+     * @param int|null    $port      The MySQL port number, or null to use the default.
      */
-    public function __construct(string $host, string $username, string $password, string $database, ?string $charset = null, ?string $collation = null)
+    public function __construct(string $host, string $username, string $password, string $database, ?string $charset = null, ?string $collation = null, ?int $port = null)
     {
         $this->host      = $host;
+        $this->port      = $port;
         $this->username  = $username;
         $this->password  = $password;
         $this->database  = $database;
         $this->charset   = $charset;
         $this->collation = $collation;
 
-        $dsn = 'mysql:host=' . $this->host;
+        $dsn = 'mysql:host=' . $host;
+
+        if ($port !== null) {
+            $dsn .= ';port=' . $port;
+        }
 
         if ($charset !== null) {
             $dsn .= ';charset=' . $charset;
@@ -187,7 +198,7 @@ final class MySqlDriver implements Driver
      */
     public function createDatabase(string $name) : Driver
     {
-        return new MySqlDriver($this->host, $this->username, $this->password, $name, $this->charset, $this->collation);
+        return new MySqlDriver($this->host, $this->username, $this->password, $name, $this->charset, $this->collation, $this->port);
     }
 
     /**
