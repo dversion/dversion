@@ -136,7 +136,7 @@ class Controller
      *
      * @return int
      */
-    public function reset(bool $resume, bool $test, int $version = null) : int
+    public function reset(bool $resume, bool $test, ?int $version) : int
     {
         if (! $test && ! $this->configuration->isDevMode()) {
             throw new \RuntimeException('Dversion is running in production mode, this command can only be run in dev mode.');
@@ -182,7 +182,7 @@ class Controller
      *
      * @throws \RuntimeException
      */
-    public function createResumePoint(bool $resume, int $version = null) : int
+    public function createResumePoint(bool $resume, ?int $version) : int
     {
         $targetDatabaseName = $this->getTemporaryDatabaseName();
         $targetDriver = $this->createDatabase($targetDatabaseName);
@@ -576,7 +576,7 @@ class Controller
      *
      * @throws \RuntimeException
      */
-    private function resume(Driver $driver, int $version = null) : int
+    private function resume(Driver $driver, ?int $version = null) : int
     {
         if ($version === null) {
             $version = $this->getDumpVersion();

@@ -59,7 +59,7 @@ final class MySqlDriver implements Driver
      * @param string|null $charset   An optional charset for the connection and default charset for new databases.
      * @param string|null $collation An optional default collation for new databases.
      */
-    public function __construct(string $host, string $username, string $password, string $database, string $charset = null, string $collation = null)
+    public function __construct(string $host, string $username, string $password, string $database, ?string $charset = null, ?string $collation = null)
     {
         $this->host      = $host;
         $this->username  = $username;
