@@ -340,12 +340,16 @@ class Controller
      */
     private function copyDatabase(Driver $targetDriver) : void
     {
-        $this->doDumpDatabase($this->configuration->getDriver(), static function($query) use ($targetDriver) {
+        $this->doDumpDatabase($this->configuration->getDriver(), static function(string $query) use ($targetDriver) {
             $targetDriver->getPdo()->exec($query);
         }, 'Copying database');
     }
 
     /**
+     * @psalm-param callable(string): void $output
+     * @psalm-suppress MixedArgument See: https://github.com/vimeo/psalm/issues/4602
+     * @psalm-suppress MixedOperand See: https://github.com/vimeo/psalm/issues/4602
+     *
      * @param Driver   $sourceDriver The source driver.
      * @param callable $output       A function to call with every SQL statement.
      * @param string   $message      The message going next to the progress bar.
@@ -363,7 +367,7 @@ class Controller
 
         $objectCount = 0;
 
-        $dumper->countObjects(static function($count) use ($progress, & $objectCount) {
+        $dumper->countObjects(static function(int $count) use ($progress, & $objectCount) {
             $objectCount += $count;
             $progress->setProgress($objectCount);
         });
@@ -376,7 +380,7 @@ class Controller
         $progress->setFormat('%message% [%bar%] %current%/%max% %percent:3s%%');
         $progress->start();
 
-        $dumper->dumpDatabase(static function($query) use ($output, $progress) {
+        $dumper->dumpDatabase(static function(string $query) use ($output, $progress) {
             $output($query);
             $progress->advance();
         });
@@ -422,7 +426,7 @@ class Controller
      * @param string $directory
      * @param string $extension
      *
-     * @return array
+     * @return int[]
      */
     private function getFileVersions(string $directory, string $extension) : array
     {
@@ -540,7 +544,8 @@ class Controller
         $number = 1;
         $that = $this;
 
-        $this->doDumpDatabase($driver, static function($query) use ($that, $directory, & $number) {
+        $this->doDumpDatabase($driver, static function(string $query) use ($that, $directory, & $number) {
+            /** @psalm-suppress MixedArgument See: https://github.com/vimeo/psalm/issues/4602 */
             file_put_contents($that->getSqlFilePath($directory, $number), $query);
             $number++;
         }, 'Dumping database');
@@ -587,6 +592,7 @@ class Controller
         $progress->setFormat('%message% [%bar%] %current%/%max% %percent:3s%%');
         $progress->start();
 
+        /** @psalm-suppress MixedAssignment See: https://github.com/vimeo/psalm/issues/4601 */
         foreach ($phar as $path => $file) {
             $this->importSqlFile($driver->getPdo(), $path);
             $progress->advance();

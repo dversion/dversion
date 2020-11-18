@@ -107,6 +107,8 @@ class Dumper
     /**
      * Counts the number of objects to dump, including the table rows.
      *
+     * @psalm-param callable(int): void $output
+     *
      * @param callable $output A function that will be called for every count.
      *
      * @return void
@@ -123,7 +125,7 @@ class Dumper
                 foreach ($objects as $tableName) {
                     $tableName = $this->driver->quoteIdentifier($tableName);
                     $rows = $this->pdo->query("SELECT COUNT(*) FROM $tableName")->fetchColumn();
-                    $output($rows);
+                    $output((int) $rows);
                 }
             }
         }
@@ -132,7 +134,7 @@ class Dumper
     }
 
     /**
-     * @param mixed $value
+     * @param scalar|null $value
      *
      * @return string
      */
@@ -142,7 +144,11 @@ class Dumper
             return 'NULL';
         }
 
-        if (is_int($value)) {
+        if (is_bool($value)) {
+            return (string) (int) $value;
+        }
+
+        if (is_int($value) || is_float($value)) {
             return (string) $value;
         }
 

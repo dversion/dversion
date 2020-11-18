@@ -32,7 +32,7 @@ interface Driver
      *
      * @param string $type One of the Database::OBJECT_* constants.
      *
-     * @return array The object names.
+     * @return string[] The object names.
      */
     public function getObjects(string $type) : array;
 
@@ -64,7 +64,7 @@ interface Driver
     /**
      * Returns the list of available databases.
      *
-     * @return array
+     * @return string[]
      */
     public function listDatabases() : array;
 
@@ -92,14 +92,14 @@ interface Driver
     /**
      * Returns an array of SQL statements to insert before the database dump.
      *
-     * @return array
+     * @return string[]
      */
     public function getPreDumpSql() : array;
 
     /**
      * Returns an array of SQL statements to insert after the database dump.
      *
-     * @return array
+     * @return string[]
      */
     public function getPostDumpSql() : array;
 

@@ -79,7 +79,7 @@ final class MySqlDriver implements Driver
 
         $query = 'CREATE DATABASE IF NOT EXISTS ' . $this->quoteIdentifier($database);
 
-        if ($charset === null) {
+        if ($charset !== null) {
             $query .= ' CHARACTER SET ' . $charset;
         }
 
@@ -228,11 +228,13 @@ final class MySqlDriver implements Driver
      * @param string $query  The query to execute.
      * @param int    $column The column index to return.
      *
-     * @return array
+     * @return string[]
      */
     private function fetchArray(string $query, int $column) : array
     {
-        return $this->pdo->query($query)->fetchAll(\PDO::FETCH_COLUMN, $column);
+        return array_map(function($value) {
+            return (string) $value;
+        }, $this->pdo->query($query)->fetchAll(\PDO::FETCH_COLUMN, $column));
     }
 
     /**
@@ -244,8 +246,10 @@ final class MySqlDriver implements Driver
      */
     private function fetchColumn(string $query, int $column, string $name) : string
     {
-        $name = $this->quoteIdentifier($name);
+        $query .= ' ' . $this->quoteIdentifier($name);
 
-        return $this->pdo->query($query . ' ' . $name)->fetchColumn($column) . ';';
+        $value = (string) $this->pdo->query($query)->fetchColumn($column);
+
+        return $value . ';';
     }
 }
