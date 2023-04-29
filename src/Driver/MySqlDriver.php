@@ -6,51 +6,28 @@ namespace Dversion\Driver;
 
 use Dversion\Dumper;
 use Dversion\Driver;
+use PDO;
 
 /**
  * Driver for MySQL databases.
  */
 final class MySqlDriver implements Driver
 {
-    /**
-     * @var string
-     */
-    private $host;
+    private string $host;
 
-    /**
-     * @var int|null
-     */
-    private $port;
+    private ?int $port;
 
-    /**
-     * @var string
-     */
-    private $username;
+    private string $username;
 
-    /**
-     * @var string
-     */
-    private $password;
+    private string $password;
 
-    /**
-     * @var string
-     */
-    private $database;
+    private string $database;
 
-    /**
-     * @var \PDO
-     */
-    private $pdo;
+    private PDO $pdo;
 
-    /**
-     * @var string|null
-     */
-    private $charset;
+    private ?string $charset;
 
-    /**
-     * @var string|null
-     */
-    private $collation;
+    private ?string $collation;
 
     /**
      * Class constructor.

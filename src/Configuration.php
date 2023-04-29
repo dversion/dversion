@@ -9,25 +9,13 @@ namespace Dversion;
  */
 final class Configuration
 {
-    /**
-     * @var \Dversion\Driver
-     */
-    private $driver;
+    private Driver $driver;
 
-    /**
-     * @var string
-     */
-    private $versionTableName = 'version_history';
+    private string $versionTableName = 'version_history';
 
-    /**
-     * @var string
-     */
-    private $sqlDirectory = 'sql';
+    private string $sqlDirectory = 'sql';
 
-    /**
-     * @var bool
-     */
-    private $devMode = false;
+    private bool $devMode = false;
 
     /**
      * @param \Dversion\Driver $driver

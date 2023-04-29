@@ -14,15 +14,9 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Controller
 {
-    /**
-     * @var \Dversion\Configuration
-     */
-    private $configuration;
+    private Configuration $configuration;
 
-    /**
-     * @var \Symfony\Component\Console\Output\OutputInterface
-     */
-    private $output;
+    private OutputInterface $output;
 
     /**
      * @param Configuration   $configuration

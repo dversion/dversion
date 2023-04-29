@@ -17,10 +17,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 abstract class AbstractCommand extends Command
 {
-    /**
-     * @var \Dversion\Configuration
-     */
-    private $configuration;
+    private Configuration $configuration;
 
     /**
      * Class constructor.

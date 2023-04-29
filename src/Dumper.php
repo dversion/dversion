@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Dversion;
 
+use PDO;
+
 /**
  * Utility class to dump a database.
  *
@@ -28,15 +30,9 @@ class Dumper
         self::OBJECT_FUNCTION
     ];
 
-    /**
-     * @var \Dversion\Driver
-     */
-    private $driver;
+    private Driver $driver;
 
-    /**
-     * @var \PDO
-     */
-    private $pdo;
+    private PDO $pdo;
 
     /**
      * Class constructor.
