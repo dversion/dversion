@@ -13,7 +13,7 @@ This tool allows you to version your database by creating sequential SQL files.
 This allows you to keep your local and production databases in sync, and re-create an up-to-date database from scratch when setting up a new development machine.
 
 This tool is written in PHP, and mostly suited for being included in your PHP applications.
-It requires PHP 7.1 or later. Although extensible to other database vendors, it only supports MySQL for now.
+It requires PHP 8.0 or later. Although extensible to other database vendors, it only supports MySQL for now.
 
 ## Setup
 
