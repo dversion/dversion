@@ -118,10 +118,7 @@ class Dumper
         $output(count($this->driver->getPostDumpSql()));
     }
 
-    /**
-     * @param scalar|null $value
-     */
-    private function quote($value) : string
+    private function quote(string|int|float|bool|null $value) : string
     {
         if ($value === null) {
             return 'NULL';
