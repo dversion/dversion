@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Dversion\Driver;
 
-use Dversion\Dumper;
 use Dversion\Driver;
+use Dversion\ObjectType;
 use PDO;
 
 /**
@@ -87,48 +87,26 @@ final class MySqlDriver implements Driver
         return $this->database;
     }
 
-    public function getObjects(string $type) : array
+    public function getObjects(ObjectType $type) : array
     {
-        switch ($type) {
-            case Dumper::OBJECT_TABLE:
-                return $this->fetchArray("SHOW FULL TABLES WHERE Table_type LIKE 'BASE TABLE'", 0);
-
-            case Dumper::OBJECT_VIEW:
-                return $this->fetchArray("SHOW FULL TABLES WHERE Table_type LIKE 'VIEW'", 0);
-
-            case Dumper::OBJECT_TRIGGER:
-                return $this->fetchArray('SHOW TRIGGERS', 0);
-
-            case Dumper::OBJECT_PROCEDURE:
-                return $this->fetchArray('SHOW PROCEDURE STATUS WHERE Db = (SELECT DATABASE())', 1);
-
-            case Dumper::OBJECT_FUNCTION:
-                return $this->fetchArray('SHOW FUNCTION STATUS WHERE Db = (SELECT DATABASE())', 1);
-        }
-
-        return [];
+        return match ($type) {
+            ObjectType::TABLE => $this->fetchArray("SHOW FULL TABLES WHERE Table_type LIKE 'BASE TABLE'", 0),
+            ObjectType::VIEW => $this->fetchArray("SHOW FULL TABLES WHERE Table_type LIKE 'VIEW'", 0),
+            ObjectType::TRIGGER => $this->fetchArray('SHOW TRIGGERS', 0),
+            ObjectType::PROCEDURE => $this->fetchArray('SHOW PROCEDURE STATUS WHERE Db = (SELECT DATABASE())', 1),
+            ObjectType::FUNCTION => $this->fetchArray('SHOW FUNCTION STATUS WHERE Db = (SELECT DATABASE())', 1),
+        };
     }
 
-    public function getCreateSql(string $type, string $name) : string
+    public function getCreateSql(ObjectType $type, string $name) : string
     {
-        switch ($type) {
-            case Dumper::OBJECT_TABLE:
-                return $this->fetchColumn('SHOW CREATE TABLE', 1, $name);
-
-            case Dumper::OBJECT_VIEW:
-                return $this->fetchColumn('SHOW CREATE VIEW', 1, $name);
-
-            case Dumper::OBJECT_TRIGGER:
-                return $this->fetchColumn('SHOW CREATE TRIGGER', 2, $name);
-
-            case Dumper::OBJECT_PROCEDURE:
-                return $this->fetchColumn('SHOW CREATE PROCEDURE', 2, $name);
-
-            case Dumper::OBJECT_FUNCTION:
-                return $this->fetchColumn('SHOW CREATE FUNCTION', 2, $name);
-        }
-
-        throw new \InvalidArgumentException('Unsupported object type.');
+        return match ($type) {
+            ObjectType::TABLE => $this->fetchColumn('SHOW CREATE TABLE', 1, $name),
+            ObjectType::VIEW => $this->fetchColumn('SHOW CREATE VIEW', 1, $name),
+            ObjectType::TRIGGER => $this->fetchColumn('SHOW CREATE TRIGGER', 2, $name),
+            ObjectType::PROCEDURE => $this->fetchColumn('SHOW CREATE PROCEDURE', 2, $name),
+            ObjectType::FUNCTION => $this->fetchColumn('SHOW CREATE FUNCTION', 2, $name),
+        };
     }
 
     public function createVersionTable(string $name) : void

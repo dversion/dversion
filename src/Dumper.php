@@ -13,23 +13,6 @@ use PDO;
  */
 class Dumper
 {
-    public const OBJECT_TABLE     = 'table';
-    public const OBJECT_VIEW      = 'view';
-    public const OBJECT_TRIGGER   = 'trigger';
-    public const OBJECT_PROCEDURE = 'procedure';
-    public const OBJECT_FUNCTION  = 'function';
-
-    /**
-     * All the database object types.
-     */
-    public const ALL_OBJECT_TYPES = [
-        self::OBJECT_TABLE,
-        self::OBJECT_VIEW,
-        self::OBJECT_TRIGGER,
-        self::OBJECT_PROCEDURE,
-        self::OBJECT_FUNCTION
-    ];
-
     private Driver $driver;
 
     private PDO $pdo;
@@ -78,11 +61,11 @@ class Dumper
             $output($sql);
         }
 
-        foreach (self::ALL_OBJECT_TYPES as $objectType) {
+        foreach (ObjectType::cases() as $objectType) {
             foreach ($this->driver->getObjects($objectType) as $name) {
                 $output($this->driver->getCreateSql($objectType, $name));
 
-                if ($objectType === self::OBJECT_TABLE) {
+                if ($objectType === ObjectType::TABLE) {
                     $this->dumpTableData($name, $output);
                 }
             }
@@ -102,11 +85,11 @@ class Dumper
     {
         $output(count($this->driver->getPreDumpSql()));
 
-        foreach (self::ALL_OBJECT_TYPES as $objectType) {
+        foreach (ObjectType::cases() as $objectType) {
             $objects = $this->driver->getObjects($objectType);
             $output(count($objects));
 
-            if ($objectType === self::OBJECT_TABLE) {
+            if ($objectType === ObjectType::TABLE) {
                 foreach ($objects as $tableName) {
                     $tableName = $this->driver->quoteIdentifier($tableName);
                     /** @var string|int $rows */
