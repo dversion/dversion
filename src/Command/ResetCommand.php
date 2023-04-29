@@ -43,8 +43,8 @@ class ResetCommand extends AbstractCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $resume = (bool) $input->getOption('resume');
-        $test = (bool) $input->getOption('test');
+        $resume = $input->getOption('resume');
+        $test = $input->getOption('test');
 
         $toVersion = $input->getOption('to-version');
 

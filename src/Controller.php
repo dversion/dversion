@@ -316,6 +316,7 @@ class Controller
         $objectCount = 0;
 
         $dumper->countObjects(static function(int $count) use ($progress, & $objectCount) {
+            /** @psalm-suppress MixedAssignment */
             $objectCount += $count;
             $progress->setProgress($objectCount);
         });
@@ -430,6 +431,8 @@ class Controller
         }
 
         $statement = $pdo->query('SELECT version FROM ' . $table . ' ORDER BY version DESC LIMIT 1');
+
+        /** @var string|int|false $version */
         $version = $statement->fetchColumn();
 
         if ($version === false) {
@@ -448,6 +451,8 @@ class Controller
         $pdo = $driver->getPdo();
 
         $statement = $pdo->query('SELECT version FROM ' . $table . ' WHERE upgradeEnd IS NULL LIMIT 1');
+
+        /** @var string|int|false $version */
         $version = $statement->fetchColumn();
 
         return ($version === false) ? null : (int) $version;

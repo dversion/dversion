@@ -37,7 +37,7 @@ class CreateResumePointCommand extends AbstractCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $resume = (bool) $input->getOption('resume');
+        $resume = $input->getOption('resume');
 
         $atVersion = $input->getOption('at-version');
 

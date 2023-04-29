@@ -43,8 +43,6 @@ class ResolveCommand extends AbstractCommand
     {
         $direction = $input->getArgument('direction');
 
-        assert(is_string($direction));
-
         return $this->getController($output)->resolve($direction);
     }
 }

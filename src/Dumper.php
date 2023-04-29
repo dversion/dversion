@@ -109,6 +109,7 @@ class Dumper
             if ($objectType === self::OBJECT_TABLE) {
                 foreach ($objects as $tableName) {
                     $tableName = $this->driver->quoteIdentifier($tableName);
+                    /** @var string|int $rows */
                     $rows = $this->pdo->query("SELECT COUNT(*) FROM $tableName")->fetchColumn();
                     $output((int) $rows);
                 }
