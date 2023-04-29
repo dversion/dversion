@@ -13,15 +13,11 @@ interface Driver
      * Returns the underlying PDO connection.
      *
      * All PDO objects must be configured to throw exceptions as soon as they're created.
-     *
-     * @return \PDO
      */
     public function getPdo() : \PDO;
 
     /**
      * Returns the current database name of the underlying PDO connection.
-     *
-     * @return string
      */
     public function getDatabaseName() : string;
 
@@ -48,8 +44,6 @@ interface Driver
      *
      * @param string $type The object type, one of the Dumper::OBJECT_* constants.
      * @param string $name The object name.
-     *
-     * @return string
      */
     public function getCreateSql(string $type, string $name) : string;
 
@@ -58,10 +52,6 @@ interface Driver
      *
      * If the version table already exists, this method must do nothing,
      * and must not trigger an error or throw an exception.
-     *
-     * @param string $name
-     *
-     * @return void
      */
     public function createVersionTable(string $name) : void;
 
@@ -77,7 +67,7 @@ interface Driver
      *
      * @param string $name The database name.
      *
-     * @return \Dversion\Driver A new driver instance to work with the newly created database.
+     * @return Driver A new driver instance to work with the newly created database.
      */
     public function createDatabase(string $name) : Driver;
 
@@ -88,8 +78,6 @@ interface Driver
      * and must not trigger an error or throw an exception.
      *
      * @param string $name The database name.
-     *
-     * @return void
      */
     public function dropDatabase(string $name) : void;
 
@@ -109,10 +97,6 @@ interface Driver
 
     /**
      * Quotes an identifier such as a table name or field name.
-     *
-     * @param string $name
-     *
-     * @return string
      */
     public function quoteIdentifier(string $name) : string;
 }

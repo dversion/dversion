@@ -15,9 +15,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class InitCommand extends AbstractCommand
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
@@ -27,9 +24,6 @@ class InitCommand extends AbstractCommand
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $version = $input->getArgument('version');

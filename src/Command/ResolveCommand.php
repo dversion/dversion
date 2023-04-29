@@ -15,9 +15,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ResolveCommand extends AbstractCommand
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
@@ -42,9 +39,6 @@ class ResolveCommand extends AbstractCommand
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $direction = $input->getArgument('direction');

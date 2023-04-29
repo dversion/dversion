@@ -15,9 +15,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class UpdateCommand extends AbstractCommand
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
@@ -32,9 +29,6 @@ class UpdateCommand extends AbstractCommand
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $test = (bool) $input->getOption('test');

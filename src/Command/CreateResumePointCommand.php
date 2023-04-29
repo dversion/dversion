@@ -15,9 +15,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class CreateResumePointCommand extends AbstractCommand
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
@@ -38,9 +35,6 @@ class CreateResumePointCommand extends AbstractCommand
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $resume = (bool) $input->getOption('resume');

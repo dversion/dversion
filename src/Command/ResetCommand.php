@@ -15,9 +15,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class ResetCommand extends AbstractCommand
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
@@ -44,9 +41,6 @@ class ResetCommand extends AbstractCommand
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $resume = (bool) $input->getOption('resume');

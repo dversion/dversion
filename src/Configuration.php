@@ -17,29 +17,16 @@ final class Configuration
 
     private bool $devMode = false;
 
-    /**
-     * @param \Dversion\Driver $driver
-     */
     public function __construct(Driver $driver)
     {
         $this->driver = $driver;
     }
 
-    /**
-     * @param \Dversion\Driver $driver
-     *
-     * @return \Dversion\Configuration
-     */
     public static function create(Driver $driver) : Configuration
     {
         return new Configuration($driver);
     }
 
-    /**
-     * @param string $name
-     *
-     * @return \Dversion\Configuration
-     */
     public function setVersionTableName(string $name) : Configuration
     {
         $this->versionTableName = $name;
@@ -47,11 +34,6 @@ final class Configuration
         return $this;
     }
 
-    /**
-     * @param string $directory
-     *
-     * @return \Dversion\Configuration
-     */
     public function setSqlDirectory(string $directory) : Configuration
     {
         $this->sqlDirectory = $directory;
@@ -59,11 +41,6 @@ final class Configuration
         return $this;
     }
 
-    /**
-     * @param bool $devMode
-     *
-     * @return \Dversion\Configuration
-     */
     public function setDevMode(bool $devMode) : Configuration
     {
         $this->devMode = $devMode;
@@ -71,33 +48,21 @@ final class Configuration
         return $this;
     }
 
-    /**
-     * @return \Dversion\Driver
-     */
     public function getDriver() : Driver
     {
         return $this->driver;
     }
 
-    /**
-     * @return string
-     */
     public function getVersionTableName() : string
     {
         return $this->versionTableName;
     }
 
-    /**
-     * @return string
-     */
     public function getSqlDirectory() : string
     {
         return $this->sqlDirectory;
     }
 
-    /**
-     * @return bool
-     */
     public function isDevMode() : bool
     {
         return $this->devMode;

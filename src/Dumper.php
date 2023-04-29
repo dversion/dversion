@@ -35,9 +35,7 @@ class Dumper
     private PDO $pdo;
 
     /**
-     * Class constructor.
-     *
-     * @param \Dversion\Driver $driver The database driver.
+     * @param Driver $driver The database driver.
      */
     public function __construct(Driver $driver)
     {
@@ -46,12 +44,7 @@ class Dumper
     }
 
     /**
-     * @psalm-param callable(string): void $output
-     *
-     * @param string   $name
-     * @param callable $output
-     *
-     * @return void
+     * @param callable(string): void $output
      */
     public function dumpTableData(string $name, callable $output) : void
     {
@@ -78,10 +71,6 @@ class Dumper
      * Dumps the database to an output function.
      *
      * @psalm-param callable(string): void $output
-     *
-     * @param callable $output A function that will be called with every SQL statement.
-     *
-     * @return void
      */
     public function dumpDatabase(callable $output) : void
     {
@@ -108,10 +97,6 @@ class Dumper
      * Counts the number of objects to dump, including the table rows.
      *
      * @psalm-param callable(int): void $output
-     *
-     * @param callable $output A function that will be called for every count.
-     *
-     * @return void
      */
     public function countObjects(callable $output) : void
     {
@@ -135,8 +120,6 @@ class Dumper
 
     /**
      * @param scalar|null $value
-     *
-     * @return string
      */
     private function quote($value) : string
     {

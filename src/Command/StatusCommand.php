@@ -14,9 +14,6 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class StatusCommand extends AbstractCommand
 {
-    /**
-     * {@inheritdoc}
-     */
     protected function configure(): void
     {
         $this
@@ -25,9 +22,6 @@ class StatusCommand extends AbstractCommand
         ;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         return $this->getController($output)->status();

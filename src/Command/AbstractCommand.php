@@ -19,11 +19,6 @@ abstract class AbstractCommand extends Command
 {
     private Configuration $configuration;
 
-    /**
-     * Class constructor.
-     *
-     * @param \Dversion\Configuration $configuration
-     */
     final public function __construct(Configuration $configuration)
     {
         parent::__construct();
@@ -31,11 +26,6 @@ abstract class AbstractCommand extends Command
         $this->configuration = $configuration;
     }
 
-    /**
-     * @param OutputInterface $output
-     *
-     * @return \Dversion\Controller
-     */
     final protected function getController(OutputInterface $output) : Controller
     {
         return new Controller($this->configuration, $output);

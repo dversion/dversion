@@ -30,8 +30,6 @@ final class MySqlDriver implements Driver
     private ?string $collation;
 
     /**
-     * Class constructor.
-     *
      * The given database will be created if it does not exist.
      *
      * @param string      $host      The MySQL server host name or IP address.
@@ -79,25 +77,16 @@ final class MySqlDriver implements Driver
         $this->pdo->exec('USE ' . $this->quoteIdentifier($database));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPdo() : \PDO
     {
         return $this->pdo;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getDatabaseName() : string
     {
         return $this->database;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getObjects(string $type) : array
     {
         switch ($type) {
@@ -120,9 +109,6 @@ final class MySqlDriver implements Driver
         return [];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getCreateSql(string $type, string $name) : string
     {
         switch ($type) {
@@ -145,9 +131,6 @@ final class MySqlDriver implements Driver
         throw new \InvalidArgumentException('Unsupported object type.');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createVersionTable(string $name) : void
     {
         $name = $this->quoteIdentifier($name);
@@ -162,49 +145,31 @@ final class MySqlDriver implements Driver
         ");
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function listDatabases() : array
     {
         return $this->fetchArray('SHOW DATABASES', 0);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function createDatabase(string $name) : Driver
     {
         return new MySqlDriver($this->host, $this->username, $this->password, $name, $this->charset, $this->collation, $this->port);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function dropDatabase(string $name) : void
     {
         $this->pdo->exec('DROP DATABASE IF EXISTS ' . $this->quoteIdentifier($name));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPreDumpSql() : array
     {
         return ['SET foreign_key_checks = 0;'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getPostDumpSql() : array
     {
         return ['SET foreign_key_checks = 1;'];
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function quoteIdentifier(string $name) : string
     {
         return '`' . str_replace('`', '``', $name) . '`';
@@ -229,8 +194,6 @@ final class MySqlDriver implements Driver
      * @param string $query  The query to execute.
      * @param int    $column The column index to return.
      * @param string $name   The object name to quote and add to the query.
-     *
-     * @return string
      */
     private function fetchColumn(string $query, int $column, string $name) : string
     {
