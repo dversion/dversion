@@ -22,7 +22,7 @@ class CleanupCommand extends AbstractCommand
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         return $this->getController($output)->cleanup();
     }

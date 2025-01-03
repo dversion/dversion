@@ -39,7 +39,7 @@ class ResolveCommand extends AbstractCommand
         ;
     }
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $direction = $input->getArgument('direction');
 
