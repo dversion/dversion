@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files psalm-version="6.14.2@bbd217fc98c0daa0a13aea2a7f119d03ba3fc9a0">
+  <file src="src/Command/CleanupCommand.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CleanupCommand]]></code>
+    </ClassMustBeFinal>
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function configure(): void]]></code>
+      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Command/CreateResumePointCommand.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[CreateResumePointCommand]]></code>
+    </ClassMustBeFinal>
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function configure(): void]]></code>
+      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Command/InitCommand.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[InitCommand]]></code>
+    </ClassMustBeFinal>
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function configure(): void]]></code>
+      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Command/ResetCommand.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ResetCommand]]></code>
+    </ClassMustBeFinal>
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function configure(): void]]></code>
+      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Command/ResolveCommand.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[ResolveCommand]]></code>
+    </ClassMustBeFinal>
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function configure(): void]]></code>
+      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Command/StatusCommand.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[StatusCommand]]></code>
+    </ClassMustBeFinal>
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function configure(): void]]></code>
+      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Command/UpdateCommand.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[UpdateCommand]]></code>
+    </ClassMustBeFinal>
+    <MissingOverrideAttribute>
+      <code><![CDATA[protected function configure(): void]]></code>
+      <code><![CDATA[protected function execute(InputInterface $input, OutputInterface $output): int]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Controller.php">
+    <ArgumentTypeCoercion>
+      <code><![CDATA[$this->getTemporaryDatabasePattern()]]></code>
+    </ArgumentTypeCoercion>
+    <ClassMustBeFinal>
+      <code><![CDATA[Controller]]></code>
+    </ClassMustBeFinal>
+    <FalsableReturnStatement>
+      <code><![CDATA[$latestVersion]]></code>
+    </FalsableReturnStatement>
+    <InvalidFalsableReturnType>
+      <code><![CDATA[int]]></code>
+    </InvalidFalsableReturnType>
+    <PossiblyFalseArgument>
+      <code><![CDATA[$latestVersion]]></code>
+      <code><![CDATA[$sql]]></code>
+    </PossiblyFalseArgument>
+    <PossiblyNullArgument>
+      <code><![CDATA[$path]]></code>
+    </PossiblyNullArgument>
+  </file>
+  <file src="src/Driver/MySqlDriver.php">
+    <MissingOverrideAttribute>
+      <code><![CDATA[public function createDatabase(string $name) : Driver]]></code>
+      <code><![CDATA[public function createVersionTable(string $name) : void]]></code>
+      <code><![CDATA[public function dropDatabase(string $name) : void]]></code>
+      <code><![CDATA[public function getCreateSql(ObjectType $type, string $name) : string]]></code>
+      <code><![CDATA[public function getDatabaseName() : string]]></code>
+      <code><![CDATA[public function getObjects(ObjectType $type) : array]]></code>
+      <code><![CDATA[public function getPdo() : \PDO]]></code>
+      <code><![CDATA[public function getPostDumpSql() : array]]></code>
+      <code><![CDATA[public function getPreDumpSql() : array]]></code>
+      <code><![CDATA[public function listDatabases() : array]]></code>
+      <code><![CDATA[public function quoteIdentifier(string $name) : string]]></code>
+    </MissingOverrideAttribute>
+  </file>
+  <file src="src/Dumper.php">
+    <ClassMustBeFinal>
+      <code><![CDATA[Dumper]]></code>
+    </ClassMustBeFinal>
+  </file>
+</files>
