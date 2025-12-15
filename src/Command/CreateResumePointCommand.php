@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Dversion\Command;
 
+use Override;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -15,6 +16,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 final class CreateResumePointCommand extends AbstractCommand
 {
+    #[Override]
     protected function configure(): void
     {
         $this
@@ -35,6 +37,7 @@ final class CreateResumePointCommand extends AbstractCommand
         ;
     }
 
+    #[Override]
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $resume = $input->getOption('resume');

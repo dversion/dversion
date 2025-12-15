@@ -6,6 +6,7 @@ namespace Dversion\Driver;
 
 use Dversion\Driver;
 use Dversion\ObjectType;
+use Override;
 use PDO;
 
 /**
@@ -77,16 +78,19 @@ final class MySqlDriver implements Driver
         $this->pdo->exec('USE ' . $this->quoteIdentifier($database));
     }
 
+    #[Override]
     public function getPdo() : \PDO
     {
         return $this->pdo;
     }
 
+    #[Override]
     public function getDatabaseName() : string
     {
         return $this->database;
     }
 
+    #[Override]
     public function getObjects(ObjectType $type) : array
     {
         return match ($type) {
@@ -98,6 +102,7 @@ final class MySqlDriver implements Driver
         };
     }
 
+    #[Override]
     public function getCreateSql(ObjectType $type, string $name) : string
     {
         return match ($type) {
@@ -109,6 +114,7 @@ final class MySqlDriver implements Driver
         };
     }
 
+    #[Override]
     public function createVersionTable(string $name) : void
     {
         $name = $this->quoteIdentifier($name);
@@ -123,31 +129,37 @@ final class MySqlDriver implements Driver
         ");
     }
 
+    #[Override]
     public function listDatabases() : array
     {
         return $this->fetchArray('SHOW DATABASES', 0);
     }
 
+    #[Override]
     public function createDatabase(string $name) : Driver
     {
         return new MySqlDriver($this->host, $this->username, $this->password, $name, $this->charset, $this->collation, $this->port);
     }
 
+    #[Override]
     public function dropDatabase(string $name) : void
     {
         $this->pdo->exec('DROP DATABASE IF EXISTS ' . $this->quoteIdentifier($name));
     }
 
+    #[Override]
     public function getPreDumpSql() : array
     {
         return ['SET foreign_key_checks = 0;'];
     }
 
+    #[Override]
     public function getPostDumpSql() : array
     {
         return ['SET foreign_key_checks = 1;'];
     }
 
+    #[Override]
     public function quoteIdentifier(string $name) : string
     {
         return '`' . str_replace('`', '``', $name) . '`';
