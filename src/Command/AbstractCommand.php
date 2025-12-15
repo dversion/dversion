@@ -17,13 +17,10 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 abstract class AbstractCommand extends Command
 {
-    private Configuration $configuration;
-
-    final public function __construct(Configuration $configuration)
-    {
+    final public function __construct(
+        private readonly Configuration $configuration,
+    ) {
         parent::__construct();
-
-        $this->configuration = $configuration;
     }
 
     final protected function getController(OutputInterface $output) : Controller

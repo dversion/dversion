@@ -12,16 +12,12 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @internal
  */
-final class Controller
+final readonly class Controller
 {
-    private Configuration $configuration;
-
-    private OutputInterface $output;
-
-    public function __construct(Configuration $configuration, OutputInterface $output)
-    {
-        $this->configuration = $configuration;
-        $this->output        = $output;
+    public function __construct(
+        private Configuration $configuration,
+        private OutputInterface $output,
+    ) {
     }
 
     public function status() : int

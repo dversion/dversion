@@ -9,17 +9,15 @@ namespace Dversion;
  */
 final class Configuration
 {
-    private Driver $driver;
-
     private string $versionTableName = 'version_history';
 
     private string $sqlDirectory = 'sql';
 
     private bool $devMode = false;
 
-    public function __construct(Driver $driver)
-    {
-        $this->driver = $driver;
+    public function __construct(
+        private readonly Driver $driver,
+    ) {
     }
 
     public static function create(Driver $driver) : Configuration

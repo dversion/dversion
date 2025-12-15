@@ -12,7 +12,7 @@ use PDO;
 /**
  * Driver for MySQL databases.
  */
-final class MySqlDriver implements Driver
+final readonly class MySqlDriver implements Driver
 {
     private string $host;
 
@@ -175,9 +175,7 @@ final class MySqlDriver implements Driver
      */
     private function fetchArray(string $query, int $column) : array
     {
-        return array_map(function($value) {
-            return (string) $value;
-        }, $this->pdo->query($query)->fetchAll(\PDO::FETCH_COLUMN, $column));
+        return array_map(fn($value) => (string) $value, $this->pdo->query($query)->fetchAll(\PDO::FETCH_COLUMN, $column));
     }
 
     /**

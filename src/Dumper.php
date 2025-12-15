@@ -11,19 +11,17 @@ use PDO;
  *
  * @internal
  */
-final class Dumper
+final readonly class Dumper
 {
-    private Driver $driver;
-
     private PDO $pdo;
 
     /**
      * @param Driver $driver The database driver.
      */
-    public function __construct(Driver $driver)
-    {
-        $this->driver = $driver;
-        $this->pdo    = $driver->getPdo();
+    public function __construct(
+        private Driver $driver,
+    ) {
+        $this->pdo = $this->driver->getPdo();
     }
 
     /**
