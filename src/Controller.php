@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @internal
  */
-class Controller
+final class Controller
 {
     private Configuration $configuration;
 

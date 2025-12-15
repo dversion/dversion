@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @internal
  */
-class CleanupCommand extends AbstractCommand
+final class CleanupCommand extends AbstractCommand
 {
     protected function configure(): void
     {

@@ -11,7 +11,7 @@ use PDO;
  *
  * @internal
  */
-class Dumper
+final class Dumper
 {
     private Driver $driver;
 

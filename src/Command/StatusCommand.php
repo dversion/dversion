@@ -12,7 +12,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @internal
  */
-class StatusCommand extends AbstractCommand
+final class StatusCommand extends AbstractCommand
 {
     protected function configure(): void
     {

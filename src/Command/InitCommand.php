@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @internal
  */
-class InitCommand extends AbstractCommand
+final class InitCommand extends AbstractCommand
 {
     protected function configure(): void
     {

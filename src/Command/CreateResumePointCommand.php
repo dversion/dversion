@@ -13,7 +13,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @internal
  */
-class CreateResumePointCommand extends AbstractCommand
+final class CreateResumePointCommand extends AbstractCommand
 {
     protected function configure(): void
     {
