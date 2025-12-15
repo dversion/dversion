@@ -42,12 +42,12 @@ $configuration = require 'dversion.php';
 
 $application = new Application();
 
-$application->add(new Command\CleanupCommand($configuration));
-$application->add(new Command\CreateResumePointCommand($configuration));
-$application->add(new Command\InitCommand($configuration));
-$application->add(new Command\ResetCommand($configuration));
-$application->add(new Command\ResolveCommand($configuration));
-$application->add(new Command\StatusCommand($configuration));
-$application->add(new Command\UpdateCommand($configuration));
+$application->addCommand(new Command\CleanupCommand($configuration));
+$application->addCommand(new Command\CreateResumePointCommand($configuration));
+$application->addCommand(new Command\InitCommand($configuration));
+$application->addCommand(new Command\ResetCommand($configuration));
+$application->addCommand(new Command\ResolveCommand($configuration));
+$application->addCommand(new Command\StatusCommand($configuration));
+$application->addCommand(new Command\UpdateCommand($configuration));
 
 $application->run();
